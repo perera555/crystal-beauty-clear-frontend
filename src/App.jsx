@@ -8,18 +8,41 @@ function App() {
 
   return (
     <>
+      <div className="h-[700px] w-[700px] border-[5px] flex justify-center items-center ">
+        <div className="h-[600px] w-[600px] bg-yellow-400 flex flex-row justify-center items-center">
+
+          <div className="h-[100px] w-[100px] bg-green-400 ">
 
 
-        <ProductCard name="Apple Ipad" price="$999" image="https://hips.hearstapps.com/hmg-prod/images/apple-ipad-mini-2024-review-lead-672a0d53e55b6.jpg?crop=0.6666666666666666xw:1xh;center,top&resize=1200:*" />
-        <ProductCard name="macbook Pro" price="$1999" image="https://media.istockphoto.com/id/1425655509/photo/apple-macbook-pro.jpg?s=612x612&w=0&k=20&c=Qvvkux4tUjgOnZInhR6C8zQdpnx_YHS4RhKBHZ3-ouM=" />
-          
-          
-   
-   
-   
-    
+          </div>
+          <div className="h-[100px] w-[100px] absolute bottom-[20px] right-[20px] bg-blue-400 ">
 
-      
+          </div>
+          <div className="h-[100px] w-[100px] relative bg-red-400 ">
+
+          </div>
+          <div className="h-[100px] w-[100px] fixed left-[10px] top-[10px] bg-purple-400 ">
+
+          </div>
+          <div className="h-[100px] w-[100px] bg-pink-400 ">
+
+          </div>
+          <div className="w-[300px] h-[300px] bg-pink-600 m-[20px] p-[40px]">
+            <div className="h-[50px] w-[50px] bg-gray-400   ">
+
+            </div>
+             <div className="h-[50px] w-[50px] bg-blue-400 m-[10px] ">
+
+            </div>
+
+          </div>
+
+
+
+        </div>
+
+      </div>
+
     </>
   )
 }
