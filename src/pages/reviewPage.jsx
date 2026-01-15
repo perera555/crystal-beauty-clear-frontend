@@ -23,7 +23,7 @@ export const ReviewPage = () => {
 // -------------------- FETCH PRODUCT --------------------
 const fetchProduct = async () => {
   const response = await axios.get(
-    `http://localhost:3000/products/${id}`
+    `http://localhost:3000/api/products/${id}`
   );
   setProduct(response.data);
 }
@@ -32,7 +32,7 @@ const fetchProduct = async () => {
 // -------------------- FETCH REVIEWS --------------------
 const fetchReviews = async () => {
   const response = await axios.get(
-    `http://localhost:3000/reviews/${id}`
+    `http://localhost:3000/api/reviews/${id}`
   );
   setReviews(response.data);
 }
@@ -41,7 +41,7 @@ const fetchReviews = async () => {
 const submitReview = async (e) => {
   e.preventDefault();
 
-  await axios.post("http://localhost:3000/reviews", {
+  await axios.post("http://localhost:3000/api/reviews", {
     productId: id,
     customerName,
     rating: Number(rating),
@@ -57,7 +57,7 @@ const submitReview = async (e) => {
 // -------------------- DELETE REVIEW (ADMIN) --------------------
 const deleteReview = async (reviewId) => {
   await axios.delete(
-    'http://localhost:3000/reviews/${reviewId}'
+    'http://localhost:3000/api/reviews/${reviewId}'
   );
   fetchReviews();
 }

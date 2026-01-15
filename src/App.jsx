@@ -10,6 +10,7 @@ import AboutPage from './pages/aboutPage';
 import ContactPage from './pages/contactPage';
 import ProductPage from './pages/productPage';
 import { ReviewPage } from './pages/reviewPage';
+import { Toaster } from 'react-hot-toast';
 
 
 
@@ -22,6 +23,7 @@ function App() {
 
     <BrowserRouter>
       <div className='w-full h-[100vh] '>
+        <Toaster position='top-right'/>
         <Routes path='/'>
           <Route path='/*' element={<HomePage />} />
            <Route path='/product' element={<ProductPage />} />
