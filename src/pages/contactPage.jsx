@@ -105,7 +105,7 @@ export default function ContactPage() {
         </p>
 
         <img
-          src="/cbcmodel.jpg"
+          src="/cbc store.png"
           alt="CBC Store"
           className="w-[350px] md:w-[500px] mx-auto rounded-3xl shadow-2xl hover:scale-[1.03] transition-all duration-300"
         />
