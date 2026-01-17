@@ -1,23 +1,24 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import mediaUpload from "../../../utils/mediaUpload"
 import toast from "react-hot-toast"
 import axios from "axios"
 
-export default function AddProductPage() {
-    const [productID, setProductID] = useState("")
-    const [name, setName] = useState("")
-    const [altNames, setAltNames] = useState("")
-    const [description, setDescription] = useState("")
+export default function UpdateProductPage() {
+    const location = useLocation()
+    const [productID, setProductID] = useState(location.state.productID)
+    const [name, setName] = useState(location.state.name)
+    const [altNames, setAltNames] = useState(location.state.altNames.join(","))
+    const [description, setDescription] = useState(location.state.description)
     const [images, setImages] = useState([])
-    const [price, setPrice] = useState("")
-    const [labelledPrice, setLabelledPrice] = useState("")
-    const [category, setCategory] = useState("cream")
-    const [stock, setStock] = useState("")
+    const [price, setPrice] = useState(location.state.price)
+    const [labelledPrice, setLabelledPrice] = useState(location.state.labelledPrice)
+    const [category, setCategory] = useState(location.state.category)
+    const [stock, setStock] = useState(location.state.stock)
 
     const navigate = useNavigate()
 
-    async function AddProduct() {
+    async function updateProduct() {
         const token = localStorage.getItem("token")
 
         if (!token) {
@@ -27,7 +28,12 @@ export default function AddProductPage() {
 
         try {
             const uploadPromises = images.map(image => mediaUpload(image))
-            const urls = await Promise.all(uploadPromises)
+            let urls = await Promise.all(uploadPromises)
+
+            if (urls.length == 0) {
+                urls = location.state.images
+
+            }
 
             const alternativeNames = altNames
                 .split(",")
@@ -46,8 +52,8 @@ export default function AddProductPage() {
                 stock: Number(stock)
             }
 
-            await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/products`,
+            await axios.put(
+                `${import.meta.env.VITE_API_URL}/api/products/` + productID,
                 product,
                 {
                     headers: {
@@ -56,12 +62,12 @@ export default function AddProductPage() {
                 }
             )
 
-            toast.success("Product added successfully")
+            toast.success("Product aupdate successfully")
             navigate("/admin/products")
 
         } catch (error) {
             console.error(error)
-            toast.error("An error occurred while adding product")
+            toast.error("An error occurred while updating product")
         }
     }
 
@@ -72,7 +78,7 @@ export default function AddProductPage() {
                 {/* Header */}
                 <div className="text-center space-y-2">
                     <h2 className="text-3xl font-bold text-secondary">
-                        Add New Product
+                        Update Product
                     </h2>
                     <p className="text-sm text-secondary/60">
                         Fill in the product details carefully
@@ -82,6 +88,7 @@ export default function AddProductPage() {
                 {/* Product ID & Name */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <input
+                        disabled
                         placeholder="Product ID"
                         className="w-full rounded-xl border border-secondary/20 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent transition"
                         value={productID}
@@ -173,7 +180,7 @@ export default function AddProductPage() {
                     </button>
 
                     <button
-                        onClick={AddProduct}
+                        onClick={updateProduct}
                         className="px-8 py-2.5 rounded-xl bg-accent text-sm font-semibold text-white shadow-lg shadow-accent/30 hover:opacity-90 transition"
                     >
                         Submit Product

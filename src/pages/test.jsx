@@ -1,45 +1,34 @@
+import { createClient } from "@supabase/supabase-js"
 import { useState } from "react"
+import mediaUpload from "../../utils/mediaUpload"
+
 
 export default function TestPage() {
 
-    const [count, setCount] = useState(0 )
+const [file , setFile] =useState(null)
 
-    const [status, setStatus] = useState("online")
+async function uploadImage(){
+   const link = await mediaUpload(file)
+   console.log(link)
+   
+
+}
 
 
     return (
         <div className="w-full h-full flex justify-center items-center ">
+            <input type="file" onChange={
+                (e)=>{
+                    setFile(e.target.files[0])
+                }
+            } />
+            <button className="bg-blue-500 text-white p-2 rounded" onClick={uploadImage}>
+                Upload
+            </button>
 
-            <div className="w-[500px] h-[500px] bg-amber-100 text-white flex justify-center items-center gap-[25px]">
-                <div className="flex justify-center items-center flex-col gap-[25px]">
-                    <button onClick={
-                    () => {
-                        console.log("Adding ...")
-                        setCount(count +1)
-                    }} className="w-[100px] bg-accent h-[40px] rounded-lg">
-                    +
-                </button>
-                <span className="text-accent text-5xl">
-                    {count}
-
-                </span>
-                <button onClick={
-                    () => {
-                        console.log("Decreasing ....")
-                        setCount(count-1)
-
-                    }} className="w-[100px] bg-accent h-[40px] rounded-lg">
-                    -
-                </button>
-
-
-                </div>
-                <div className=" flex flex-col justify-center items-center ">
-                    <span className="text-accent text-5xl">{status}</span>
-
-                </div>
-                
-            </div>
+           
         </div>
     )
 }    
+
+

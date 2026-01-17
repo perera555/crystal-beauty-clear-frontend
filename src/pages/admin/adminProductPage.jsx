@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { CiCirclePlus } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AdminProductPage() {
     const [products, setProducts] = useState([])
+    const navigate =useNavigate()
 
     useEffect(() => {
         axios
@@ -30,7 +31,8 @@ export default function AdminProductPage() {
                             <th className="px-6 py-4">Product ID</th>
                             <th className="px-6 py-4">Name</th>
                             <th className="px-6 py-4">Price</th>
-                            <th className="px-6 py-4">Labelled</th>
+                            <th className="px-6 py-4">Labelled Price</th>
+                            <th className="px-6 py-4">Stock</th>
                             <th className="px-6 py-4">Category</th>
                             <th className="px-6 py-4 text-center">Actions</th>
                         </tr>
@@ -59,11 +61,14 @@ export default function AdminProductPage() {
                                 </td>
 
                                 <td className="px-6 py-4 font-semibold">
-                                    ${item.price}
+                                    LKR{item.price}
                                 </td>
 
                                 <td className="px-6 py-4 text-secondary/70">
-                                    ${item.labelledPrice}
+                                    LKR{item.labelledPrice}
+                                </td>
+                                 <td className="px-6 py-4 text-secondary/70">
+                                    {item.stock}
                                 </td>
 
                                 <td className="px-6 py-4">
@@ -79,7 +84,14 @@ export default function AdminProductPage() {
                                         </button>
 
                                         <button className="p-2 rounded-lg hover:bg-accent/10 transition">
-                                            <FaRegEdit className="text-secondary hover:text-accent text-lg" />
+                                            <FaRegEdit onClick={
+                                                ()=>{
+                                                    navigate("/admin/updateproduct",{
+                                                        state:item
+                                                    })
+
+                                            }} 
+                                            className="text-secondary hover:text-accent text-lg" />
                                         </button>
                                     </div>
                                 </td>
