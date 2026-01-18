@@ -8,9 +8,13 @@ import TestPage from './pages/test';
 import LoginPage from './pages/loginPage';
 import AboutPage from './pages/aboutPage';
 import ContactPage from './pages/contactPage';
-import ProductPage from './pages/productPage';
+
+
 import { ReviewPage } from './pages/reviewPage';
 import { Toaster } from 'react-hot-toast';
+import { ProductPage } from './pages/productPage';
+
+
 
 
 
@@ -19,25 +23,23 @@ function App() {
 
 
   return (
-    
+
 
     <BrowserRouter>
       <div className='w-full h-[100vh] '>
-        <Toaster position='top-right'/>
+        <Toaster position='top-right' />
         <Routes path='/'>
           <Route path='/*' element={<HomePage />} />
-           <Route path='/product' element={<ProductPage />} />
+          <Route path='/products' element={<ProductPage />} />
           <Route path='/about' element={<AboutPage />} />
           <Route path='/contact' element={<ContactPage />} />
-          
-
           <Route path='/register' element={<h1>Register Page</h1>} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/admin/*' element={<AdminPage />} />
           <Route path='/test' element={<TestPage />} />
           {/* we need to modify review url to review/:id to make sure the attached id is passing into the review page as "id" */}
           <Route path='/review/:id' element={<ReviewPage />} />
-      
+
 
         </Routes>
       </div>

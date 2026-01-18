@@ -1,14 +1,10 @@
-import { Link } from "react-router-dom";
 import Header from "../components/header";
 
 
 export default function HomePage() {
-    
   return (
-     
     <div className="w-full min-h-screen bg-linear-to-br from-primary via-white to-accent text-secondary font-sans overflow-hidden">
-        <Header />
-        
+      <Header/>
       {/* Hero Section */}
       <div className="flex flex-col-reverse md:flex-row items-center justify-between px-8 md:px-20 py-16 md:py-24">
         {/* Text */}
@@ -26,20 +22,6 @@ export default function HomePage() {
             for elegance, comfort, and confidence.
           </p>
 
-          <div className="flex flex-wrap gap-4 mt-6">
-            <Link
-              to="/products"
-              className="px-6 py-3 rounded-full bg-linear-to-r from-accent to-orange-500 text-white font-semibold shadow-lg hover:scale-105 transition-transform duration-300"
-            >
-              Shop Now
-            </Link>
-            <Link
-              to="/about"
-              className="px-6 py-3 rounded-full border border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-all"
-            >
-              Learn More
-            </Link>
-          </div>
         </div>
 
         {/* Image */}
@@ -155,7 +137,8 @@ export default function HomePage() {
         © {new Date().getFullYear()} Crystal Beauty Clear — All Rights Reserved
       </div>
     </div>
-  );
+ 
+    );
 }
 
-
+    
