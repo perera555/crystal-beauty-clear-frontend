@@ -14,6 +14,8 @@ import { ReviewPage } from './pages/reviewPage';
 import { Toaster } from 'react-hot-toast';
 import { ProductPage } from './pages/productPage';
 import ProductOverView from './pages/productOverview';
+import CartPage from './pages/cart';
+import CheckoutPage from './pages/checkout';
 
 
 
@@ -35,6 +37,8 @@ function App() {
           <Route path='/about' element={<AboutPage />} />
           <Route path='/contact' element={<ContactPage />} />
           <Route path='/overview/:id' element={<ProductOverView />} />
+          <Route path='/cart' element={<CartPage />} />
+          <Route path='/checkout' element={<CheckoutPage />} />
 
           <Route path='/register' element={<h1>Register Page</h1>} />
           <Route path='/login' element={<LoginPage />} />
