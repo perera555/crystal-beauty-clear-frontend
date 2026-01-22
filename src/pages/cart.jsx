@@ -12,15 +12,13 @@ export default function CartPage() {
     <div className="w-full min-h-screen flex flex-col items-center bg-primary">
       <Header />
 
-      {/* removed max-h and overflow */}
       <div className="w-[600px] flex flex-col gap-5 mt-8">
-
         {cart.map((item, index) => (
           <div
             key={index}
             className="w-full h-[120px] flex relative items-center bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-visible"
           >
-            {/* DELETE — FLOATING OUTSIDE */}
+            {/* DELETE */}
             <button
               className="absolute top-1/2 -right-6 -translate-y-1/2 z-20
                          bg-white border border-red-100 text-lg rounded-full
@@ -89,13 +87,14 @@ export default function CartPage() {
 
         {/* TOTAL */}
         <div className="w-full h-[90px] bg-white flex items-center justify-between px-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-
           <Link
             to="/checkout"
+            state={cart}  
             className="bg-accent text-white px-6 py-3 rounded-lg font-medium hover:bg-accent/80 transition-all duration-200 shadow-sm"
           >
             Proceed To Checkout
           </Link>
+
           <span className="font-medium text-secondary text-lg tracking-wide">
             Total :
             <span className="text-accent ml-3 font-semibold text-xl">
@@ -103,7 +102,6 @@ export default function CartPage() {
             </span>
           </span>
         </div>
-
       </div>
     </div>
   );

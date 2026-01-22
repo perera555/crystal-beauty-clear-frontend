@@ -8,8 +8,6 @@ import TestPage from './pages/test';
 import LoginPage from './pages/loginPage';
 import AboutPage from './pages/aboutPage';
 import ContactPage from './pages/contactPage';
-
-
 import { ReviewPage } from './pages/reviewPage';
 import { Toaster } from 'react-hot-toast';
 import { ProductPage } from './pages/productPage';
@@ -42,6 +40,7 @@ function App() {
 
           <Route path='/register' element={<h1>Register Page</h1>} />
           <Route path='/login' element={<LoginPage />} />
+          <Route path='/admin/*' element={<AdminPage />} />
           <Route path='/admin/*' element={<AdminPage />} />
           <Route path='/test' element={<TestPage />} />
           {/* we need to modify review url to review/:id to make sure the attached id is passing into the review page as "id" */}
