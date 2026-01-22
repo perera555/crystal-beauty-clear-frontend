@@ -10,6 +10,8 @@ import { loadCart } from "../../utils/card";
 export default function CheckoutPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
 
   const [cart, setCart] = useState(
     Array.isArray(location.state) ? location.state : loadCart()
@@ -36,7 +38,7 @@ export default function CheckoutPage() {
 
       for (let i = 0; i < cart.length; i++) {
         item.push({
-          productId: cart[i].productID, // ✅ matches backend
+          productId: cart[i].productID,
           quantity: cart[i].quantity,
         });
       }
@@ -44,7 +46,8 @@ export default function CheckoutPage() {
       await axios.post(
         import.meta.env.VITE_API_URL + "/api/orders/",
         {
-          address: "No.125,malabe rd,kaduwela",
+          address: address,
+          customerName: name === "" ? null : name,
           items: item,
         },
         {
@@ -65,97 +68,133 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center bg-primary">
+    <div className="min-h-screen bg-primary flex flex-col items-center">
       <Header />
 
-      <div className="w-[600px] flex flex-col gap-5 mt-8">
+      <div className="w-full max-w-3xl px-4 py-8 flex flex-col gap-6">
         {cart.length > 0 &&
           cart.map((item, index) => (
             <div
               key={index}
-              className="w-full h-[120px] flex relative items-center bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-visible"
+              className="relative bg-white rounded-2xl shadow-md overflow-hidden
+                         flex flex-col sm:flex-row"
             >
               <button
-                className="absolute top-1/2 -right-6 -translate-y-1/2 z-20
-                         bg-white border border-red-100 text-lg rounded-full
-                         aspect-square p-[8px] text-red-400
-                         shadow-md hover:bg-red-500 hover:text-white
-                         transition-all duration-200"
+                className="absolute top-3 right-3 z-20
+                           bg-white border border-red-200 text-red-500
+                           rounded-full p-2 shadow
+                           hover:bg-red-500 hover:text-white
+                           transition"
                 onClick={() => {
                   const newCart = cart.filter((_, i) => i !== index);
                   setCart(newCart);
                   localStorage.setItem("cart", JSON.stringify(newCart));
                 }}
               >
-                <BiTrash />
+                <BiTrash size={18} />
               </button>
 
               <img
-                className="h-full aspect-square object-cover rounded-l-xl"
                 src={item.image}
                 alt=""
+                className="w-full h-48 sm:w-32 sm:h-32 object-cover"
               />
 
-              <div className="w-[200px] h-full flex flex-col justify-center px-4">
-                <h1 className="font-semibold text-[17px] text-secondary leading-snug">
-                  {item.name}
-                </h1>
-                <span className="text-xs tracking-wide text-secondary/60 mt-1">
-                  {item.productID}
-                </span>
-              </div>
-
-              <div className="w-[100px] h-full flex flex-col justify-center items-center text-secondary">
-                <CiCircleChevUp
-                  className="text-[28px] cursor-pointer hover:text-accent transition-colors"
-                  onClick={() => {
-                    const newCart = [...cart];
-                    newCart[index].quantity += 1;
-                    setCart(newCart);
-                  }}
-                />
-                <span className="font-medium text-[22px] my-[2px]">
-                  {item.quantity}
-                </span>
-                <CiCircleChevDown
-                  className="text-[28px] cursor-pointer hover:text-accent transition-colors"
-                  onClick={() => {
-                    const newCart = [...cart];
-                    if (newCart[index].quantity > 1) {
-                      newCart[index].quantity -= 1;
-                    }
-                    setCart(newCart);
-                  }}
-                />
-              </div>
-
-              <div className="w-[180px] h-full flex flex-col justify-center items-end pr-6">
-                {item.labelledPrice > item.price && (
-                  <span className="text-secondary text-xs line-through opacity-50 mb-1">
-                    LKR {Number(item.labelledPrice).toFixed(2)}
+              <div className="flex flex-1 flex-col sm:flex-row">
+                <div className="flex-1 px-4 py-3 flex flex-col justify-center">
+                  <h1 className="font-semibold text-secondary text-base">
+                    {item.name}
+                  </h1>
+                  <span className="text-xs text-secondary/60 mt-1">
+                    {item.productID}
                   </span>
-                )}
-                <span className="text-accent font-semibold text-[20px] tracking-wide">
-                  LKR {Number(item.price).toFixed(2)}
-                </span>
+                </div>
+
+                <div className="flex sm:flex-col items-center justify-center gap-2 px-4 py-3">
+                  <CiCircleChevUp
+                    className="text-2xl cursor-pointer hover:text-accent transition"
+                    onClick={() => {
+                      const newCart = [...cart];
+                      newCart[index].quantity += 1;
+                      setCart(newCart);
+                    }}
+                  />
+                  <span className="text-lg font-medium">
+                    {item.quantity}
+                  </span>
+                  <CiCircleChevDown
+                    className="text-2xl cursor-pointer hover:text-accent transition"
+                    onClick={() => {
+                      const newCart = [...cart];
+                      if (newCart[index].quantity > 1) {
+                        newCart[index].quantity -= 1;
+                      }
+                      setCart(newCart);
+                    }}
+                  />
+                </div>
+
+                <div className="px-4 py-3 flex flex-col justify-center items-end min-w-[120px]">
+                  {item.labelledPrice > item.price && (
+                    <span className="text-xs line-through text-secondary/50">
+                      LKR {Number(item.labelledPrice).toFixed(2)}
+                    </span>
+                  )}
+                  <span className="text-accent font-semibold text-lg">
+                    LKR {Number(item.price).toFixed(2)}
+                  </span>
+                </div>
               </div>
             </div>
           ))}
 
-        <div className="w-full h-[90px] bg-white flex items-center justify-between px-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+        <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-secondary">Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your full name"
+              className="w-full h-12 rounded-lg border border-secondary/30 px-4 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-accent transition"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-secondary">
+              Shipping Address
+            </label>
+            <textarea
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="House No, Street, City"
+              className="w-full min-h-[120px] rounded-lg border border-secondary/30
+                         px-4 py-3 text-sm resize-none
+                         focus:outline-none focus:ring-2 focus:ring-accent transition"
+            />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-md p-6
+                        flex flex-col sm:flex-row
+                        items-center justify-between gap-4">
           <button
+            type="button"
             onClick={purchaseCart}
-            className="bg-accent text-white px-6 py-3 rounded-lg font-medium hover:bg-accent/80 transition-all duration-200 shadow-sm"
+            className="w-full sm:w-auto bg-accent text-white
+                       px-8 py-3 rounded-xl font-medium
+                       hover:bg-accent/80 transition shadow"
           >
             Order
           </button>
 
-          <span className="font-medium text-secondary text-lg tracking-wide">
-            Total :
-            <span className="text-accent ml-3 font-semibold text-xl">
+          <div className="text-secondary text-lg">
+            Total
+            <span className="ml-3 text-accent font-semibold text-xl">
               LKR {Number(getTotal()).toFixed(2)}
             </span>
-          </span>
+          </div>
         </div>
       </div>
     </div>
