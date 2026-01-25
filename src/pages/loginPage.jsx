@@ -1,48 +1,61 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
+    const googleLogin = useGoogleLogin({
+        onSuccess: (response) => {
+            axios.post(
+                import.meta.env.VITE_API_URL + "/api/users/google-login",
+                { token: response.access_token }
+            )
+            .then((res) => {
+                localStorage.setItem("token", res.data.token);
+                const user = res.data.user;
+                if (user.role === "admin") {
+                    navigate("/admin");
+                } else {
+                    navigate("/");
+                }
+            }).catch((e) => {
+                console.error("Google login failed:", e);
+                toast.error("Google Login Failed, please try again");
+            });
+        },
+    }); 
 
     async function login() {
         try {
             const response = await axios.post(
-        import.meta.env.VITE_API_URL + "/api/users/login",
-        { email:email, password:password }
+                import.meta.env.VITE_API_URL + "/api/users/login",
+                { email: email, password: password }
             );
-            localStorage.setItem("token",response.data.token)
-            toast.success("Login successful")
+
+            localStorage.setItem("token", response.data.token);
+            toast.success("Login successful");
 
             const user = response.data.user;
-            if (user.role == "admin") {
-                navigate ("/admin");
-                
-
+            if (user.role === "admin") {
+                navigate("/admin");
             } else {
-                navigate("/") ;
-
+                navigate("/");
             }
-
         } catch (e) {
-         console.error("Login failed:", e);
-         toast.error("Login Failed, please check your credentials")
-
+            console.error("Login failed:", e);
+            toast.error("Login Failed, please check your credentials");
         }
-
     }
 
     return (
         <div className="w-full h-screen bg-[url('/login1.jpg')] bg-cover bg-center flex relative overflow-hidden">
-
-            {/* Luxury overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-black/55 via-black/35 to-black/55"></div>
 
-            {/* LEFT BRAND PANEL */}
             <div className="w-1/2 h-full hidden lg:flex flex-col justify-center px-24 relative z-10">
                 <h1 className="text-5xl font-light text-white tracking-widest mb-6">
                     Crystal Beauty Clear
@@ -53,12 +66,8 @@ export default function LoginPage() {
                 </p>
             </div>
 
-            {/* RIGHT LOGIN PANEL */}
             <div className="w-full lg:w-1/2 h-full flex justify-center items-center relative z-10 px-6">
-
                 <div className="w-full max-w-[480px] backdrop-blur-2xl bg-white/20 border border-white/30 rounded-[32px] shadow-[0_30px_90px_rgba(0,0,0,0.55)] px-14 py-16 flex flex-col items-center">
-
-                    {/* Logo – dark white */}
                     <img
                         src="/logo.png"
                         alt="Crystal Beauty Clear logo"
@@ -66,7 +75,6 @@ export default function LoginPage() {
                         style={{ filter: "invert(92%) sepia(6%) saturate(120%)" }}
                     />
 
-                    {/* LOG IN title */}
                     <h2 className="text-4xl font-semibold text-white tracking-wider mb-2">
                         Log In
                     </h2>
@@ -74,7 +82,6 @@ export default function LoginPage() {
                         Sign in to view your orders, wishlist, and exclusive offers
                     </p>
 
-                    {/* Email */}
                     <div className="w-full mb-6">
                         <label className="text-xs text-white/70 ml-1">
                             Email Address
@@ -87,7 +94,6 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    {/* Password */}
                     <div className="w-full mb-3">
                         <label className="text-xs text-white/70 ml-1">
                             Password
@@ -100,7 +106,6 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    {/* Forgot password */}
                     <div className="w-full text-right mb-8">
                         <button
                             type="button"
@@ -110,7 +115,6 @@ export default function LoginPage() {
                         </button>
                     </div>
 
-                    {/* Login Button */}
                     <button
                         onClick={login}
                         className="w-full h-12 rounded-xl bg-gradient-to-r from-[var(--color-accent)] to-orange-500 text-white font-semibold tracking-widest shadow-xl hover:shadow-2xl hover:brightness-110 active:scale-[0.96] transition-all duration-200"
@@ -118,20 +122,25 @@ export default function LoginPage() {
                         LOG IN
                     </button>
 
-                    {/* Signup */}
+                    <button
+                        onClick={googleLogin}
+                        className="w-full h-12 mt-4 rounded-xl bg-gradient-to-r from-[var(--color-accent)] to-orange-500 text-white font-semibold tracking-widest shadow-xl hover:shadow-2xl hover:brightness-110 active:scale-[0.96] transition-all duration-200"
+                    >
+                        Google LogIn
+                    </button>
+
                     <div className="mt-8 text-center">
                         <p className="text-sm text-white/70">
                             New to Crystal Beauty Clear?
                         </p>
-                        <button
-                            type="button"
+                        <Link
+                            to="/register"
                             className="mt-2 text-[var(--color-primary)] font-medium hover:underline tracking-wide"
                         >
                             Create an account
-                        </button>
+                        </Link>
                     </div>
 
-                    {/* Footer */}
                     <p className="text-xs text-white/50 mt-10 tracking-wide">
                         © 2026 Crystal Beauty Clear · Beauty you can trust
                     </p>

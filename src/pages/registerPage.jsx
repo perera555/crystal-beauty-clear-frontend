@@ -1,0 +1,182 @@
+import { useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
+export default function RegisterPage() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const navigate = useNavigate();
+
+
+    async function register() {
+
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
+        try {
+            const response = await axios.post(
+                import.meta.env.VITE_API_URL + "/api/users/",
+                {
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    password: password
+                }
+            );
+            toast.success("Register successful");
+            navigate("/login");
+             
+
+        } catch (e) {
+            console.error("Register failed:", e);
+            toast.error("Register Failed, please check your credentials")
+
+        }
+
+    }
+
+    return (
+        <div className="w-full h-screen bg-[url('/login1.jpg')] bg-cover bg-center flex relative overflow-hidden">
+
+            {/* Luxury overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black/55 via-black/35 to-black/55"></div>
+            {/* LEFT Register PANEL */}
+            <div className="w-full lg:w-1/2 h-full flex justify-center items-center relative z-10 px-6">
+
+                <div className="w-full max-w-[480px] backdrop-blur-2xl bg-white/20 border border-white/30 rounded-[32px] shadow-[0_30px_90px_rgba(0,0,0,0.55)] px-14 py-16 flex flex-col items-center">
+
+                    {/* Logo – dark white */}
+                    <img
+                        src="/logo.png"
+                        alt="Crystal Beauty Clear logo"
+                        className="w-24 mb-6 brightness-0 opacity-90"
+                        style={{ filter: "invert(92%) sepia(6%) saturate(120%)" }}
+                    />
+
+                    {/* Register title */}
+                    <h2 className="text-4xl font-semibold text-white tracking-wider mb-2">
+                        Register
+                    </h2>
+                    <p className="text-sm text-white/80 mb-10 text-center">
+                        Create an account to view your orders, wishlist, and exclusive offers
+                    </p>
+
+                    {/* Email */}
+                    <div className="w-full mb-6">
+                        <label className="text-xs text-white/70 ml-1">
+                            Email Address
+                        </label>
+                        <input
+                            type="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter your email"
+                            autoComplete=""
+                            className="w-full h-12 mt-2 px-4 rounded-xl bg-white/90 text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all"
+                        />
+                    </div>
+
+                    {/* First Name */}
+                    <div className="w-full mb-6">
+                        <label className="text-xs text-white/70 ml-1">
+                            First Name
+                        </label>
+                        <input
+                            type="text"
+                            onChange={(e) => setFirstName(e.target.value)}
+                            placeholder="Enter your first name"
+                            autoComplete="given-name"
+                            className="w-full h-12 mt-2 px-4 rounded-xl bg-white/90 text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all"
+                        />
+                    </div>
+                    {/* Last Name */}
+                    <div className="w-full mb-6">
+                        <label className="text-xs text-white/70 ml-1">
+                            Last Name
+                        </label>
+                        <input
+                            type="text"
+                            onChange={(e) => setLastName(e.target.value)}
+                            placeholder="Enter your last name"
+                            autoComplete="family-name"
+                            className="w-full h-12 mt-2 px-4 rounded-xl bg-white/90 text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all"
+                        />
+                    </div>
+
+                    {/* Password */}
+                    <div className="w-full mb-3">
+                        <label className="text-xs text-white/70 ml-1">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter your password"
+                            autoComplete="password"
+                            className="w-full h-12 mt-2 px-4 rounded-xl bg-white/90 text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all"
+                        />
+                    </div>
+
+                    {/* Confirm Password */}
+                    <div className="w-full mb-8">
+                        <label className="text-xs text-white/70 ml-1">
+                            Confirm Password
+                        </label>
+                        <input
+                            id="confirmPassword"
+                            type="password"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Re-enter your password"
+                            autoComplete="confirm-password"
+                            className="w-full h-12 mt-2 px-4 rounded-xl bg-white/90 text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all"
+                        />
+                    </div>
+                    {/* Register Button */}
+                    <button
+                        onClick={register}
+                        className="w-full h-12 rounded-xl bg-gradient-to-r from-[var(--color-accent)] to-orange-500 text-white font-semibold tracking-widest shadow-xl hover:shadow-2xl hover:brightness-110 active:scale-[0.96] transition-all duration-200"
+                    >
+                        REGISTER
+                    </button>
+
+                    {/* Signup */}
+                    <div className="mt-8 text-center">
+                        <p className="text-sm text-white/70">
+                            Already have an account?
+                        </p>
+                        <Link
+                            to="/login"
+                            className="mt-2 text-[var(--color-primary)] font-medium hover:underline tracking-wide"
+                        >
+                            Login to your account
+                        </Link>
+                    </div>
+
+                    {/* Footer */}
+                    <p className="text-xs text-white/50 mt-10 tracking-wide">
+                        © 2026 Crystal Beauty Clear · Beauty you can trust
+                    </p>
+                </div>
+            </div>
+
+            {/* RIGHT BRAND PANEL */}
+            <div className="w-1/2 h-full hidden lg:flex flex-col justify-center px-24 relative z-10">
+                <h1 className="text-5xl font-light text-white tracking-widest mb-6">
+                    Join Crystal Beauty Clear
+                </h1>
+                <p className="text-lg text-white/80 max-w-md leading-relaxed">
+                    Create your account to unlock exclusive offers, track your orders,
+                    and experience beauty crafted with care — just for you.
+                </p>
+            </div>
+
+
+        </div>
+    );
+}

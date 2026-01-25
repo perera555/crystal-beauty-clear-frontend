@@ -14,6 +14,8 @@ import { ProductPage } from './pages/productPage';
 import ProductOverView from './pages/productOverview';
 import CartPage from './pages/cart';
 import CheckoutPage from './pages/checkout';
+import RegisterPage from './pages/registerPage';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 
@@ -27,6 +29,7 @@ function App() {
 
 
     <BrowserRouter>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <div className='w-full h-[100vh] '>
         <Toaster position='top-right' />
         <Routes path='/'>
@@ -38,7 +41,7 @@ function App() {
           <Route path='/cart' element={<CartPage />} />
           <Route path='/checkout' element={<CheckoutPage />} />
 
-          <Route path='/register' element={<h1>Register Page</h1>} />
+          <Route path='/register' element={<RegisterPage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/admin/*' element={<AdminPage />} />
           <Route path='/admin/*' element={<AdminPage />} />
@@ -47,8 +50,9 @@ function App() {
           <Route path='/review/:id' element={<ReviewPage />} />
 
 
-        </Routes>
+        </Routes> 
       </div>
+      </GoogleOAuthProvider>
     </BrowserRouter>
 
 
