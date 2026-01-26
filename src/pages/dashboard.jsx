@@ -30,26 +30,44 @@ export default function AdminDashboard() {
             }),
         ])
             .then(([productsRes, ordersRes]) => {
-                setProducts(productsRes.data);
-                setOrders(ordersRes.data);
+                setProducts(productsRes.data || []);
+                setOrders(ordersRes.data || []);
             })
             .finally(() => setIsLoading(false));
     }, [navigate]);
 
-    const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+    const totalRevenue = orders.reduce(
+        (sum, order) => sum + (order.total || 0),
+        0
+    );
+
     const lowStockProducts = products.filter(p => p.stock < 5);
+
+    const ORDER_STATUSES = [
+        { key: "pending", label: "Pending", color: "bg-yellow-400" },
+        { key: "delivered", label: "Delivered", color: "bg-green-500" },
+        { key: "cancelled", label: "Cancelled", color: "bg-red-500" },
+    ];
 
     if (isLoading) return <Loader />;
 
     return (
-        <div className="w-full h-full p-6 bg-primary space-y-12">
+        <div className="w-full min-h-screen p-6 bg-primary space-y-12">
 
             {/* ================= STATS ================= */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8">
                 <StatCard icon={<FaBoxOpen />} title="Total Products" value={products.length} />
                 <StatCard icon={<FaShoppingCart />} title="Total Orders" value={orders.length} />
-                <StatCard icon={<FaMoneyBillWave />} title="Revenue" value={`LKR ${totalRevenue.toFixed(2)}`} />
-                <StatCard icon={<FaExclamationTriangle />} title="Low Stock" value={lowStockProducts.length} />
+                <StatCard
+                    icon={<FaMoneyBillWave />}
+                    title="Revenue"
+                    value={`LKR ${totalRevenue.toFixed(2)}`}
+                />
+                <StatCard
+                    icon={<FaExclamationTriangle />}
+                    title="Low Stock"
+                    value={lowStockProducts.length}
+                />
             </div>
 
             {/* ================= MAIN CONTENT ================= */}
@@ -80,7 +98,7 @@ export default function AdminDashboard() {
                                     <td className="py-3">{order.orderID}</td>
                                     <td className="py-3">{order.customerName}</td>
                                     <td className="py-3 text-right font-semibold">
-                                        LKR {order.total.toFixed(2)}
+                                        LKR {(order.total || 0).toFixed(2)}
                                     </td>
                                 </tr>
                             ))}
@@ -143,55 +161,43 @@ export default function AdminDashboard() {
                 </div>
             </div>
 
-            {/* ================= CIRCULAR REVENUE GRAPH ================= */}
-            <div className="bg-white rounded-3xl shadow-xl p-6">
-                <h3 className="text-xl font-semibold text-secondary mb-6">
-                    Revenue Distribution
-                </h3>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 justify-items-center">
-                    {orders.slice(0, 6).map((order, index) => {
-                        const percentage = totalRevenue
-                            ? (order.total / totalRevenue) * 100
-                            : 0;
-
-                        return (
-                            <CircleGraph
-                                key={order.orderID}
-                                value={percentage}
-                                label={`${index + 1}`}
-                            />
-                        );
-                    })}
-                </div>
-            </div>
-
             {/* ================= ORDER STATUS ================= */}
             <div className="bg-white rounded-3xl shadow-xl p-6">
                 <h3 className="text-xl font-semibold text-secondary mb-6">
-                    Order Status
+                    Order Status Overview
                 </h3>
 
-                {["Pending", "Delivered", "Cancelled"].map(status => {
-                    const count = orders.filter(o => o.status === status).length;
-                    const percentage = orders.length ? (count / orders.length) * 100 : 0;
+                <div className="space-y-6">
+                    {ORDER_STATUSES.map(({ key, label, color }) => {
+                        const count = orders.filter(
+                            o => o.status?.toLowerCase() === key
+                        ).length;
 
-                    return (
-                        <div key={status} className="mb-5">
-                            <div className="flex justify-between text-sm text-secondary mb-1">
-                                <span>{status}</span>
-                                <span>{count}</span>
-                            </div>
+                        const percentage = orders.length
+                            ? (count / orders.length) * 100
+                            : 0;
 
-                            <div className="w-full h-3 bg-primary rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-accent rounded-full transition-all"
-                                    style={{ width: `${percentage}%` }}
-                                />
+                        return (
+                            <div key={key}>
+                                <div className="flex justify-between mb-2 text-sm font-medium text-secondary">
+                                    <span>{label}</span>
+                                    <span>{count}</span>
+                                </div>
+
+                                <div className="w-full h-3 bg-primary rounded-full overflow-hidden">
+                                    <div
+                                        className={`h-full ${color} rounded-full transition-all duration-700`}
+                                        style={{ width: `${percentage}%` }}
+                                    />
+                                </div>
+
+                                <div className="text-right text-xs text-secondary/60 mt-1">
+                                    {percentage.toFixed(1)}%
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );
@@ -211,46 +217,6 @@ function StatCard({ icon, title, value }) {
                     <h2 className="text-2xl font-bold text-secondary">{value}</h2>
                 </div>
             </div>
-        </div>
-    );
-}
-
-/* ================= CIRCLE GRAPH ================= */
-function CircleGraph({ value, label }) {
-    const radius = 36;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (value / 100) * circumference;
-
-    return (
-        <div className="flex flex-col items-center">
-            <svg width="100" height="100" className="rotate-[-90deg]">
-                <circle
-                    cx="50"
-                    cy="50"
-                    r={radius}
-                    stroke="#FEF3E2"
-                    strokeWidth="10"
-                    fill="none"
-                />
-                <circle
-                    cx="50"
-                    cy="50"
-                    r={radius}
-                    stroke="#FA812F"
-                    strokeWidth="10"
-                    fill="none"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
-                    strokeLinecap="round"
-                />
-            </svg>
-
-            <span className="text-sm font-semibold text-secondary mt-2">
-                {label}
-            </span>
-            <span className="text-xs text-secondary/60">
-                {value.toFixed(1)}%
-            </span>
         </div>
     );
 }

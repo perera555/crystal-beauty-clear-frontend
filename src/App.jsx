@@ -16,6 +16,7 @@ import CartPage from './pages/cart';
 import CheckoutPage from './pages/checkout';
 import RegisterPage from './pages/registerPage';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import ForgetPasswordPage from './pages/forget-password';
 
 
 
@@ -40,9 +41,9 @@ function App() {
           <Route path='/overview/:id' element={<ProductOverView />} />
           <Route path='/cart' element={<CartPage />} />
           <Route path='/checkout' element={<CheckoutPage />} />
-
           <Route path='/register' element={<RegisterPage />} />
-          <Route path='/login' element={<LoginPage />} />
+           <Route path='/forgot-password' element={<ForgetPasswordPage />} />
+          <Route path='/login' element={<LoginPage />} /> 
           <Route path='/admin/*' element={<AdminPage />} />
           <Route path='/admin/*' element={<AdminPage />} />
           <Route path='/test' element={<TestPage />} />

@@ -107,12 +107,12 @@ export default function LoginPage() {
                     </div>
 
                     <div className="w-full text-right mb-8">
-                        <button
-                            type="button"
+                        <Link
+                            to="/forgot-password"
                             className="text-xs text-white/70 hover:text-[var(--color-primary)] transition"
                         >
                             Forgot your password?
-                        </button>
+                        </Link>
                     </div>
 
                     <button
