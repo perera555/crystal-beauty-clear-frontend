@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const TEMP_AVATAR = "/user.png";
 
@@ -7,6 +8,8 @@ export default function UserDataMobile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isLogoutconfirmedopen, setIsLogoutconfirmedopen] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -49,7 +52,7 @@ export default function UserDataMobile() {
                   localStorage.removeItem("token");
                   setUser(null);
                   setIsLogoutconfirmedopen(false);
-                  window.location.href = "/login"; // ✅ redirect
+                  window.location.href = "/login";
                 }}
               >
                 Yes
@@ -98,23 +101,28 @@ export default function UserDataMobile() {
 
           {/* Select */}
           <select
+            defaultValue=""
             onChange={(e) => {
               if (e.target.value === "logout") {
                 setIsLogoutconfirmedopen(true);
+              }
+
+              if (e.target.value === "orders") {
+                navigate("/checkout"); // ✅ GO TO CHECKOUT PAGE
               }
             }}
             className="h-[30px] bg-accent text-white text-sm px-3 rounded-full cursor-pointer
                        shadow-md shadow-black/30
                        focus:outline-none focus:ring-2 focus:ring-accent/50"
           >
-            <option className="text-secondary bg-primary text-sm">
+            <option value="" className="text-secondary bg-primary text-sm">
               Select
             </option>
-            <option className="text-secondary bg-primary text-sm">
+            <option value="account" className="text-secondary bg-primary text-sm">
               Account Setting
             </option>
-            <option className="text-secondary bg-primary text-sm">
-              Orders
+            <option value="orders" className="text-secondary bg-primary text-sm">
+              Checkout
             </option>
             <option value="logout" className="text-secondary bg-primary text-sm">
               Logout

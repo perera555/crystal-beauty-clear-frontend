@@ -1,13 +1,15 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const TEMP_AVATAR = "/user.png";
-
 
 export default function UserData() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isLogoutconfirmedopen, setIsLogoutconfirmedopen] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,7 +52,7 @@ export default function UserData() {
                   localStorage.removeItem("token");
                   setUser(null);
                   setIsLogoutconfirmedopen(false);
-                  window.location.href = "/login"; 
+                  window.location.href = "/login";
                 }}
               >
                 Yes
@@ -85,7 +87,6 @@ export default function UserData() {
                 e.currentTarget.src = TEMP_AVATAR;
               }}
             />
-
           </div>
 
           {/* Name */}
@@ -93,26 +94,44 @@ export default function UserData() {
             {user.firstName}
           </span>
 
-          {/* Select with Logout option */}
+          {/* Select */}
           <select
+            defaultValue=""
             onChange={(e) => {
-              if (e.target.value === "logout") {
+              const value = e.target.value;
+
+              if (value === "account") {
+                navigate("/account"); // ✅ Account Setting
+              }
+
+              if (value === "orders") {
+                navigate("/checkout");
+              }
+
+              if (value === "logout") {
                 setIsLogoutconfirmedopen(true);
               }
+
+              // allow re-selecting same option
+              e.target.value = "";
             }}
-            className="h-[28px] bg-accent text-white text-sm px-3 rounded-full cursor-pointer
+            className="h-[30px] bg-accent text-white text-sm px-3 rounded-full cursor-pointer
+                       shadow-md shadow-black/30
                        focus:outline-none focus:ring-2 focus:ring-accent/50"
           >
-            <option className="bg-primary text-secondary">
+            <option value="" disabled className="bg-primary text-secondary text-sm">
               Select
             </option>
-            <option className="bg-primary text-secondary">
+
+            <option value="account" className="bg-primary text-secondary text-sm">
               Account Setting
             </option>
-            <option className="bg-primary text-secondary">
-              Orders
+
+            <option value="orders" className="bg-primary text-secondary text-sm">
+              Checkout
             </option>
-            <option value="logout" className="bg-primary text-secondary">
+
+            <option value="logout" className="bg-primary text-secondary text-sm">
               Logout
             </option>
           </select>
