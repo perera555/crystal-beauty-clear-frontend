@@ -23,6 +23,7 @@ import ForgetPasswordPage from './pages/forget-password';
 
 
 
+
 function App() {
 
 
@@ -30,29 +31,28 @@ function App() {
 
 
     <BrowserRouter>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <div className='w-full h-[100vh] '>
-        <Toaster position='top-right' />
-        <Routes path='/'>
-          <Route path='/*' element={<HomePage />} />
-          <Route path='/products' element={<ProductPage />} />
-          <Route path='/about' element={<AboutPage />} />
-          <Route path='/contact' element={<ContactPage />} />
-          <Route path='/overview/:id' element={<ProductOverView />} />
-          <Route path='/cart' element={<CartPage />} />
-          <Route path='/checkout' element={<CheckoutPage />} />
-          <Route path='/register' element={<RegisterPage />} />
-           <Route path='/forgot-password' element={<ForgetPasswordPage />} />
-          <Route path='/login' element={<LoginPage />} /> 
-          <Route path='/admin/*' element={<AdminPage />} />
-          <Route path='/admin/*' element={<AdminPage />} />
-          <Route path='/test' element={<TestPage />} />
-          {/* we need to modify review url to review/:id to make sure the attached id is passing into the review page as "id" */}
-          <Route path='/review/:id' element={<ReviewPage />} />
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <div className='w-full h-[100vh] '>
+          <Toaster position='top-right' />
+          <Routes path='/'>
+            <Route path='/*' element={<HomePage />} />
+            <Route path='/products' element={<ProductPage />} />
+            <Route path='/about' element={<AboutPage />} />
+            <Route path='/contact' element={<ContactPage />} />
+            <Route path='/overview/:id' element={<ProductOverView />} />
+            <Route path='/cart' element={<CartPage />} />
+            <Route path='/checkout' element={<CheckoutPage />} />
+            <Route path='/register' element={<RegisterPage />} />
+            <Route path='/forgot-password' element={<ForgetPasswordPage />} />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/admin/*' element={<AdminPage />} />
+            <Route path='/test' element={<TestPage />} />
+            {/* we need to modify review url to review/:id to make sure the attached id is passing into the review page as "id" */}
+            <Route path='/review/:id' element={<ReviewPage />} />
 
 
-        </Routes> 
-      </div>
+          </Routes>
+        </div>
       </GoogleOAuthProvider>
     </BrowserRouter>
 

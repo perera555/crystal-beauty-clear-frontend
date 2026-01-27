@@ -73,7 +73,7 @@ export default function ForgetPasswordPage() {
   }
 
   return (
-    <div className="w-full h-screen bg-[url('/login1.jpg')] bg-cover bg-center flex justify-center items-center">
+    <div className="w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center flex justify-center items-center">
       {step === "email" && (
         <div className="w-[400px] h-[400px] backdrop-blur-md bg-white/30 rounded-2xl p-8 flex flex-col justify-center items-center">
           <h2 className="text-2xl font-bold mb-4">Reset Password</h2>

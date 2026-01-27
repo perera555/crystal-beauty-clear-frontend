@@ -53,7 +53,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="w-full h-screen bg-[url('/login1.jpg')] bg-cover bg-center flex relative overflow-hidden">
+        <div className="w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center flex relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-black/55 via-black/35 to-black/55"></div>
 
             <div className="w-1/2 h-full hidden lg:flex flex-col justify-center px-24 relative z-10">

@@ -69,7 +69,7 @@ export default function AdminOrdersPage() {
                   key={item.orderID}
                   className="hover:bg-primary/50 transition-colors cursor-pointer"
                   onClick={() => {
-                    setSelectedOrder(item);   // ✅ FIX
+                    setSelectedOrder(item);   
                     setIsModelOpen(true);
                   }}
                 >
@@ -78,7 +78,7 @@ export default function AdminOrdersPage() {
                   </td>
 
                   <td className="px-6 py-4">
-                    {item.Item.length} {/* ✅ FIX */}
+                    {item.Item.length} 
                   </td>
 
                   <td className="px-6 py-4">

@@ -12,7 +12,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Loader } from "../components/Loader";
-import AdminUsersPage from "./admin/adminusersPage";
+import AdminUsersPage from "./admin/adminUsersPage";
+
 
 export default function AdminPage() {
   const navigate = useNavigate();
@@ -21,8 +22,7 @@ export default function AdminPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-  
-    if (token == null) {
+    if (!token) {
       toast.error("Please Login to access admin Panel");
       navigate("/login");
       return;
@@ -30,9 +30,7 @@ export default function AdminPage() {
 
     axios
       .get(import.meta.env.VITE_API_URL + "/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
         if (res.data.user.role !== "admin") {
@@ -40,7 +38,6 @@ export default function AdminPage() {
           navigate("/");
           return;
         }
-
         setUserLoaded(true);
       })
       .catch(() => {
@@ -48,17 +45,13 @@ export default function AdminPage() {
         localStorage.removeItem("token");
         navigate("/login");
       });
-  }, []); 
+  }, []);
 
   return (
     <div className="w-full h-full bg-primary flex p-2 text-secondary">
-      <div className="w-[300px] h-full bg-primary flex flex-col items-center gap-[20px]">
-        <div className="flex flex-row w-[90%] h-[70px] bg-accent items-center rounded-2xl mb-[20px]">
-          <img
-            src="logo.png"
-            alt="CBC-Crystal Beauty Clear"
-            className="h-[70px]"
-          />
+      <div className="w-[300px] h-full bg-primary flex flex-col items-center gap-5">
+        <div className="flex w-[90%] h-[70px] bg-accent items-center rounded-2xl mb-5">
+          <img src="logo.png" alt="Admin" className="h-full" />
           <span className="text-white text-xl ml-4">Admin Panel</span>
         </div>
 
@@ -79,21 +72,19 @@ export default function AdminPage() {
         </Link>
       </div>
 
-      <div className="w-[calc(100%-300px)] h-full border-[2px] border-accent rounded-[20px] overflow-hidden">
-        <div className="h-full w-full overflow-y-scroll">
-          {userloaded ? (
-            <Routes>
-              <Route path="/" element={<AdminDashboard />} />
-              <Route path="/products" element={<AdminProductPage />} />
-              <Route path="/orders" element={<AdminOrdersPage />} />
-              <Route path="/addproduct" element={<AddProductPage />} />
-              <Route path="/updateproduct" element={<UpdateProductPage />} />
-              <Route path="/users" element={<AdminUsersPage />} />
-            </Routes>
-          ) : (
-            <Loader />
-          )}
-        </div>
+      <div className="flex-1 border-2 border-accent rounded-2xl overflow-hidden">
+        {userloaded ? (
+          <Routes>
+            <Route path="/" element={<AdminDashboard />} />
+            <Route path="/products" element={<AdminProductPage />} />
+            <Route path="/orders" element={<AdminOrdersPage />} />
+            <Route path="/addproduct" element={<AddProductPage />} />
+            <Route path="/updateproduct" element={<UpdateProductPage />} />
+            <Route path="/users" element={<AdminUsersPage/>} />
+          </Routes>
+        ) : (
+          <Loader />
+        )}
       </div>
     </div>
   );
