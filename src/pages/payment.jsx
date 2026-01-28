@@ -1,9 +1,18 @@
-import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
+import Header from "../components/header";
 
 export default function Payment() {
-  const [orders, setOrders] = useState([]);
-  const [order, setOrder] = useState(null);
+  const { state: cart } = useLocation(); // 🔥 cart from CartPage
+  const navigate = useNavigate();
+
+  const [customer, setCustomer] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
 
   const [card, setCard] = useState({
     number: "",
@@ -12,99 +21,137 @@ export default function Payment() {
     cvv: "",
   });
 
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/payment/orders")
-      .then(res => setOrders(res.data));
-  }, []);
-
-  const handleOrderSelect = (orderID) => {
-    const selected = orders.find(o => o.orderID === orderID);
-    setOrder(selected);
-  };
+  const total = cart?.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   const handlePay = async () => {
-    await axios.post("http://localhost:5000/api/payment/pay", {
-      orderID: order.orderID,
-    });
-    alert("Payment Successful ✅");
+    if (!cart || cart.length === 0) return;
+
+    const orderPayload = {
+      orderID: "ORD-" + Date.now(),
+      Item: cart.map((item) => ({
+        productID: item.productID,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        image: item.image,
+      })),
+      customerName: customer.name,
+      email: customer.email,
+      phone: customer.phone,
+      address: customer.address,
+      total,
+    };
+
+    try {
+      await axios.post("http://localhost:5000/api/payment/pay", orderPayload);
+      alert("Payment Successful ✅");
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      alert("Payment Failed ❌");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-primary)] flex justify-center items-center">
-      <div className="bg-white w-full max-w-2xl p-6 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-[var(--color-secondary)] mb-4">
-          Payment Page
-        </h2>
+    <div className="w-full min-h-screen bg-primary flex flex-col items-center">
+      <Header />
 
-        {/* Order selector */}
-        <select
-          className="w-full border p-2 rounded mb-4"
-          onChange={(e) => handleOrderSelect(e.target.value)}
-        >
-          <option>Select Order</option>
-          {orders.map(o => (
-            <option key={o.orderID} value={o.orderID}>
-              {o.orderID} - {o.customerName}
-            </option>
+      <div className="w-full max-w-[700px] bg-white mt-8 p-6 rounded-xl shadow-md">
+        <h1 className="text-xl font-semibold text-secondary mb-4">
+          Payment Details
+        </h1>
+
+        {/* CUSTOMER DETAILS */}
+        <div className="grid grid-cols-1 gap-4 mb-6">
+          <input
+            placeholder="Full Name"
+            className="border rounded-lg px-4 py-2"
+            onChange={(e) =>
+              setCustomer({ ...customer, name: e.target.value })
+            }
+          />
+          <input
+            placeholder="Email"
+            className="border rounded-lg px-4 py-2"
+            onChange={(e) =>
+              setCustomer({ ...customer, email: e.target.value })
+            }
+          />
+          <input
+            placeholder="Phone"
+            className="border rounded-lg px-4 py-2"
+            onChange={(e) =>
+              setCustomer({ ...customer, phone: e.target.value })
+            }
+          />
+          <textarea
+            placeholder="Delivery Address"
+            className="border rounded-lg px-4 py-2"
+            onChange={(e) =>
+              setCustomer({ ...customer, address: e.target.value })
+            }
+          />
+        </div>
+
+        {/* ORDER SUMMARY */}
+        <div className="border rounded-lg p-4 mb-6">
+          {cart.map((item, i) => (
+            <div key={i} className="flex justify-between mb-2 text-sm">
+              <span>
+                {item.name} × {item.quantity}
+              </span>
+              <span>LKR {(item.price * item.quantity).toFixed(2)}</span>
+            </div>
           ))}
-        </select>
+          <div className="text-right font-semibold text-lg text-accent">
+            Total: LKR {total.toFixed(2)}
+          </div>
+        </div>
 
-        {order && (
-          <>
-            {/* Customer Info */}
-            <div className="mb-4 text-sm">
-              <p><b>Name:</b> {order.customerName}</p>
-              <p><b>Email:</b> {order.email}</p>
-              <p><b>Phone:</b> {order.phone}</p>
-              <p><b>Address:</b> {order.address}</p>
-            </div>
-
-            {/* Items */}
-            <div className="border rounded p-3 mb-4">
-              <h3 className="font-semibold mb-2">Order Items</h3>
-              {order.Item.map((item, index) => (
-                <div key={index} className="flex justify-between text-sm">
-                  <span>{item.name} × {item.quantity}</span>
-                  <span>₹{item.price * item.quantity}</span>
-                </div>
-              ))}
-              <div className="font-bold text-right mt-2">
-                Total: ₹{order.total}
-              </div>
-            </div>
-
-            {/* Card Form */}
+        {/* CARD DETAILS */}
+        <div className="grid grid-cols-1 gap-4 mb-6">
+          <input
+            placeholder="Card Number"
+            className="border rounded-lg px-4 py-2"
+            onChange={(e) =>
+              setCard({ ...card, number: e.target.value })
+            }
+          />
+          <input
+            placeholder="Card Holder Name"
+            className="border rounded-lg px-4 py-2"
+            onChange={(e) =>
+              setCard({ ...card, name: e.target.value })
+            }
+          />
+          <div className="flex gap-3">
             <input
-              placeholder="Card Number"
-              className="w-full border p-2 rounded mb-3"
-              onChange={(e) => setCard({ ...card, number: e.target.value })}
+              placeholder="MM/YY"
+              className="border rounded-lg px-4 py-2 w-1/2"
+              onChange={(e) =>
+                setCard({ ...card, expiry: e.target.value })
+              }
             />
             <input
-              placeholder="Card Holder Name"
-              className="w-full border p-2 rounded mb-3"
-              onChange={(e) => setCard({ ...card, name: e.target.value })}
+              placeholder="CVV"
+              className="border rounded-lg px-4 py-2 w-1/2"
+              onChange={(e) =>
+                setCard({ ...card, cvv: e.target.value })
+              }
             />
-            <div className="flex gap-3">
-              <input
-                placeholder="MM/YY"
-                className="w-1/2 border p-2 rounded"
-                onChange={(e) => setCard({ ...card, expiry: e.target.value })}
-              />
-              <input
-                placeholder="CVV"
-                className="w-1/2 border p-2 rounded"
-                onChange={(e) => setCard({ ...card, cvv: e.target.value })}
-              />
-            </div>
+          </div>
+        </div>
 
-            <button
-              onClick={handlePay}
-              className="w-full mt-4 bg-[var(--color-accent)] text-white py-2 rounded font-semibold"
-            >
-              Pay ₹{order.total}
-            </button>
-          </>
-        )}
+        <button
+          onClick={handlePay}
+          className="w-full bg-accent text-white py-3 rounded-lg
+                     font-medium hover:bg-accent/80 transition-all"
+        >
+          Pay LKR {total.toFixed(2)}
+        </button>
       </div>
     </div>
   );
