@@ -101,7 +101,7 @@ export default function UserData() {
               const value = e.target.value;
 
               if (value === "account") {
-                navigate("/account"); // ✅ Account Setting
+                navigate("/setting"); // ✅ Account Setting
               }
 
               if (value === "orders") {

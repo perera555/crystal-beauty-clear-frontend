@@ -17,6 +17,7 @@ import CheckoutPage from './pages/checkout';
 import RegisterPage from './pages/registerPage';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ForgetPasswordPage from './pages/forget-password';
+import UserSettingPage from './pages/setting';
 
 
 
@@ -49,6 +50,7 @@ function App() {
             <Route path='/test' element={<TestPage />} />
             {/* we need to modify review url to review/:id to make sure the attached id is passing into the review page as "id" */}
             <Route path='/review/:id' element={<ReviewPage />} />
+            <Route path='/setting' element={<UserSettingPage />} />
 
 
           </Routes>
