@@ -30,19 +30,11 @@ export default function UserSettingPage() {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then((res) => {
-                const userData = res.data.user;
-
-                setUser(userData);
-                setFirstName(userData.firstName || "");
-                setLastName(userData.lastName || "");
-
-                if (userData.image) {
-                    setPhotoUrl(
-                        userData.image.startsWith("http")
-                            ? userData.image
-                            : `${API_URL}/${userData.image}`
-                    );
-                }
+                const u = res.data.user;
+                setUser(u);
+                setFirstName(u.firstName || "");
+                setLastName(u.lastName || "");
+                if (u.image) setPhotoUrl(u.image);
             })
             .catch(() => {
                 localStorage.removeItem("token");
@@ -76,12 +68,20 @@ export default function UserSettingPage() {
                 data.image = link;
             }
 
-            await axios.put(`${API_URL}/api/users/me`, data, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const res = await axios.put(
+                `${API_URL}/api/users/me`,
+                data,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-            toast.success("Profile updated");
-            navigate("/");
+            // ✅ SYNC UI WITH UPDATED USER (KEY FIX)
+            const updatedUser = res.data.user;
+            setUser(updatedUser);
+            setFirstName(updatedUser.firstName || "");
+            setLastName(updatedUser.lastName || "");
+            if (updatedUser.image) setPhotoUrl(updatedUser.image);
+
+            toast.success("Profile updated successfully");
         } catch (err) {
             console.error(err);
             toast.error("Error updating profile");
@@ -107,7 +107,6 @@ export default function UserSettingPage() {
             setPassword("");
             setConfirmPassword("");
             toast.success("Password updated");
-            navigate("/");
         } catch (err) {
             console.error(err);
             toast.error("Error updating password");
@@ -117,10 +116,7 @@ export default function UserSettingPage() {
     // ================= LOADING =================
     if (loading) {
         return (
-            <div
-                className="h-screen flex items-center justify-center text-secondary
-                bg-[url('/login.jpg')] bg-cover bg-center bg-no-repeat"
-            >
+            <div className="w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center flex items-center justify-center text-white text-xl">
                 Loading...
             </div>
         );
@@ -128,36 +124,23 @@ export default function UserSettingPage() {
 
     // ================= UI =================
     return (
-        <div
-            className="relative min-h-screen flex items-center justify-center px-6
-            bg-[url('/login.jpg')] bg-cover bg-center bg-no-repeat"
-        >
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-secondary/60 backdrop-blur-sm"></div>
+        <div className="relative w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center flex items-center justify-center px-6">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
 
-            {/* Glass container */}
-            <div className="relative w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-12
-                bg-primary/80 backdrop-blur-2xl rounded-[36px] p-10
-                shadow-[0_50px_120px_rgba(0,0,0,0.45)]">
+            <div className="relative w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-14">
 
                 {/* PROFILE */}
-                <div className="rounded-[28px] p-8 bg-white shadow-[0_20px_40px_rgba(0,0,0,0.15)]">
-                    <h2 className="text-2xl font-semibold text-secondary mb-8">
+                <div className="bg-white/90 backdrop-blur-xl rounded-[36px] p-12 shadow-[0_40px_90px_rgba(0,0,0,0.35)]">
+                    <h2 className="text-3xl font-semibold text-secondary mb-10">
                         Profile
                     </h2>
 
-                    <div className="flex justify-center mb-10">
+                    <div className="flex items-center gap-8 mb-12">
                         <div className="relative">
-                            <div className="w-28 h-28 rounded-full p-[3px]
-                                bg-[color:var(--color-accent)]
-                                shadow-[0_0_35px_rgba(250,129,47,0.6)]">
-                                <div className="w-full h-full rounded-full overflow-hidden bg-primary">
+                            <div className="w-28 h-28 rounded-full p-1 bg-gradient-to-br from-accent to-orange-400 shadow-[0_18px_40px_rgba(250,129,47,0.6)]">
+                                <div className="w-full h-full rounded-full overflow-hidden bg-primary border">
                                     {photoUrl ? (
-                                        <img
-                                            src={photoUrl}
-                                            alt="Profile"
-                                            className="w-full h-full object-cover"
-                                        />
+                                        <img src={photoUrl} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-secondary/40 text-3xl font-semibold">
                                             {firstName.charAt(0)}
@@ -166,66 +149,50 @@ export default function UserSettingPage() {
                                 </div>
                             </div>
 
-                            <label className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full
-                                bg-primary border border-secondary/20
-                                shadow-lg flex items-center justify-center cursor-pointer
-                                hover:scale-110 transition">
+                            <label className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center cursor-pointer">
                                 📷
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handlePhotoChange}
-                                    className="hidden"
-                                />
+                                <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
                             </label>
                         </div>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-7">
                         <input
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             placeholder="First name"
-                            className="w-full px-5 py-4 rounded-xl bg-primary
-                                border border-secondary/20 text-secondary
-                                focus:ring-2 focus:ring-[color:var(--color-accent)] outline-none"
+                            className="w-full px-6 py-4 rounded-2xl bg-primary border shadow-inner"
                         />
 
                         <input
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             placeholder="Last name"
-                            className="w-full px-5 py-4 rounded-xl bg-primary
-                                border border-secondary/20 text-secondary
-                                focus:ring-2 focus:ring-[color:var(--color-accent)] outline-none"
+                            className="w-full px-6 py-4 rounded-2xl bg-primary border shadow-inner"
                         />
 
                         <button
                             onClick={updateUserData}
-                            className="w-full py-4 rounded-xl font-semibold text-white
-                                bg-[color:var(--color-accent)]
-                                shadow-[0_10px_30px_rgba(250,129,47,0.5)]
-                                hover:scale-[1.02] transition">
-                            Save Profile
+                            className="w-full py-4 rounded-2xl bg-accent text-white font-semibold shadow-[0_8px_0_#d8661f]"
+                        >
+                            Save profile
                         </button>
                     </div>
                 </div>
 
                 {/* SECURITY */}
-                <div className="rounded-[28px] p-8 bg-white shadow-[0_20px_40px_rgba(0,0,0,0.15)]">
-                    <h2 className="text-2xl font-semibold text-secondary mb-8">
+                <div className="bg-white/90 backdrop-blur-xl rounded-[36px] p-12 shadow-[0_40px_90px_rgba(0,0,0,0.35)]">
+                    <h2 className="text-3xl font-semibold text-secondary mb-10">
                         Security
                     </h2>
 
-                    <div className="space-y-6">
+                    <div className="space-y-7">
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="New password"
-                            className="w-full px-5 py-4 rounded-xl bg-primary
-                                border border-secondary/20 text-secondary
-                                focus:ring-2 focus:ring-secondary outline-none"
+                            className="w-full px-6 py-4 rounded-2xl bg-primary border shadow-inner"
                         />
 
                         <input
@@ -233,18 +200,14 @@ export default function UserSettingPage() {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             placeholder="Confirm password"
-                            className="w-full px-5 py-4 rounded-xl bg-primary
-                                border border-secondary/20 text-secondary
-                                focus:ring-2 focus:ring-secondary outline-none"
+                            className="w-full px-6 py-4 rounded-2xl bg-primary border shadow-inner"
                         />
 
                         <button
                             onClick={updatePassword}
-                            className="w-full py-4 rounded-xl font-semibold text-white
-                                bg-secondary
-                                shadow-[0_10px_30px_rgba(57,62,70,0.5)]
-                                hover:scale-[1.02] transition">
-                            Update Password
+                            className="w-full py-4 rounded-2xl bg-secondary text-white font-semibold shadow-[0_8px_0_#2b2f35]"
+                        >
+                            Update password
                         </button>
                     </div>
                 </div>
