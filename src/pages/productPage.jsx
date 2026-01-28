@@ -51,7 +51,6 @@ export function ProductPage() {
 
               setProducts(searchResult.data);
             } catch (err) {
-              console.error("Error searching products", err);
               toast.error("Error searching products");
             }
           }}

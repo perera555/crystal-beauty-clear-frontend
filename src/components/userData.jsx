@@ -101,18 +101,17 @@ export default function UserData() {
               const value = e.target.value;
 
               if (value === "account") {
-                navigate("/setting"); // ✅ Account Setting
+                navigate("/setting");
               }
 
               if (value === "orders") {
-                navigate("/checkout");
+                navigate("/orders"); // ✅ CHANGED HERE
               }
 
               if (value === "logout") {
                 setIsLogoutconfirmedopen(true);
               }
 
-              // allow re-selecting same option
               e.target.value = "";
             }}
             className="h-[30px] bg-accent text-white text-sm px-3 rounded-full cursor-pointer
@@ -128,7 +127,7 @@ export default function UserData() {
             </option>
 
             <option value="orders" className="bg-primary text-secondary text-sm">
-              Checkout
+              My Orders
             </option>
 
             <option value="logout" className="bg-primary text-secondary text-sm">

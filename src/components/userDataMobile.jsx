@@ -37,7 +37,6 @@ export default function UserDataMobile() {
 
   return (
     <div className="flex justify-end items-center px-4 min-h-[56px]">
-
       {/* Logout Confirmation Modal */}
       {isLogoutconfirmedopen && (
         <div className="fixed z-[120] h-screen w-full top-0 left-0 bg-black/30 flex justify-center items-center">
@@ -76,7 +75,6 @@ export default function UserDataMobile() {
       {/* Logged-in User */}
       {!loading && user && (
         <div className="flex items-center gap-3 bg-primary px-4 py-1.5 rounded-full shadow-lg shadow-black/20">
-
           {/* Avatar */}
           <div
             className="w-[42px] h-[42px] rounded-full overflow-hidden flex items-center justify-center
@@ -103,27 +101,38 @@ export default function UserDataMobile() {
           <select
             defaultValue=""
             onChange={(e) => {
-              if (e.target.value === "logout") {
+              const value = e.target.value;
+
+              if (value === "account") {
+                navigate("/setting");
+              }
+
+              if (value === "orders") {
+                navigate("/orders");
+              }
+
+              if (value === "logout") {
                 setIsLogoutconfirmedopen(true);
               }
 
-              if (e.target.value === "orders") {
-                navigate("/checkout"); // ✅ GO TO CHECKOUT PAGE
-              }
+              e.target.value = "";
             }}
             className="h-[30px] bg-accent text-white text-sm px-3 rounded-full cursor-pointer
                        shadow-md shadow-black/30
                        focus:outline-none focus:ring-2 focus:ring-accent/50"
           >
-            <option value="" className="text-secondary bg-primary text-sm">
+            <option value="" disabled className="text-secondary bg-primary text-sm">
               Select
             </option>
+
             <option value="account" className="text-secondary bg-primary text-sm">
               Account Setting
             </option>
+
             <option value="orders" className="text-secondary bg-primary text-sm">
-              Checkout
+              My Orders
             </option>
+
             <option value="logout" className="text-secondary bg-primary text-sm">
               Logout
             </option>

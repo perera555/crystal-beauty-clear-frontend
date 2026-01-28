@@ -18,6 +18,8 @@ import RegisterPage from './pages/registerPage';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ForgetPasswordPage from './pages/forget-password';
 import UserSettingPage from './pages/setting';
+import Orders from './pages/orders';
+import Payment from './pages/payment';
 
 
 
@@ -43,6 +45,7 @@ function App() {
             <Route path='/overview/:id' element={<ProductOverView />} />
             <Route path='/cart' element={<CartPage />} />
             <Route path='/checkout' element={<CheckoutPage />} />
+             <Route path='/orders' element={<Orders />} />
             <Route path='/register' element={<RegisterPage />} />
             <Route path='/forgot-password' element={<ForgetPasswordPage />} />
             <Route path='/login' element={<LoginPage />} />
@@ -51,6 +54,7 @@ function App() {
             {/* we need to modify review url to review/:id to make sure the attached id is passing into the review page as "id" */}
             <Route path='/review/:id' element={<ReviewPage />} />
             <Route path='/setting' element={<UserSettingPage />} />
+            <Route path='/payments' element={<Payment />} />
 
 
           </Routes>
