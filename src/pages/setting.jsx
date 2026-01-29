@@ -74,7 +74,6 @@ export default function UserSettingPage() {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            // ✅ SYNC UI WITH UPDATED USER (KEY FIX)
             const updatedUser = res.data.user;
             setUser(updatedUser);
             setFirstName(updatedUser.firstName || "");
@@ -116,7 +115,8 @@ export default function UserSettingPage() {
     // ================= LOADING =================
     if (loading) {
         return (
-            <div className="w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center flex items-center justify-center text-white text-xl">
+            <div className="w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center
+                            flex items-center justify-center text-white text-xl">
                 Loading...
             </div>
         );
@@ -124,75 +124,102 @@ export default function UserSettingPage() {
 
     // ================= UI =================
     return (
-        <div className="relative w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center flex items-center justify-center px-6">
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div className="relative w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center
+                        flex items-center justify-center px-6">
 
-            <div className="relative w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-14">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
 
-                {/* PROFILE */}
-                <div className="bg-white/90 backdrop-blur-xl rounded-[36px] p-12 shadow-[0_40px_90px_rgba(0,0,0,0.35)]">
-                    <h2 className="text-3xl font-semibold text-secondary mb-10">
+            <div className="relative w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16">
+
+                {/* ================= PROFILE ================= */}
+                <div className="bg-white/95 backdrop-blur-xl rounded-[40px] p-14
+                                shadow-[0_40px_100px_rgba(0,0,0,0.35)]">
+
+                    <h2 className="text-3xl font-semibold text-secondary mb-12">
                         Profile
                     </h2>
 
-                    <div className="flex items-center gap-8 mb-12">
+                    <div className="flex items-center gap-10 mb-14">
                         <div className="relative">
-                            <div className="w-28 h-28 rounded-full p-1 bg-gradient-to-br from-accent to-orange-400 shadow-[0_18px_40px_rgba(250,129,47,0.6)]">
-                                <div className="w-full h-full rounded-full overflow-hidden bg-primary border">
+                            <div className="w-32 h-32 rounded-full p-[3px]
+                                            bg-gradient-to-br from-accent to-orange-400
+                                            shadow-[0_20px_45px_rgba(250,129,47,0.6)]">
+                                <div className="w-full h-full rounded-full overflow-hidden
+                                                bg-primary border border-secondary/10">
                                     {photoUrl ? (
                                         <img src={photoUrl} className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-secondary/40 text-3xl font-semibold">
+                                        <div className="w-full h-full flex items-center justify-center
+                                                        text-secondary/40 text-4xl font-semibold">
                                             {firstName.charAt(0)}
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            <label className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center cursor-pointer">
+                            <label className="absolute -bottom-2 -right-2 w-11 h-11
+                                              rounded-full bg-white shadow-xl
+                                              flex items-center justify-center cursor-pointer
+                                              text-lg">
                                 📷
-                                <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handlePhotoChange}
+                                    className="hidden"
+                                />
                             </label>
                         </div>
                     </div>
 
-                    <div className="space-y-7">
+                    <div className="space-y-8">
                         <input
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             placeholder="First name"
-                            className="w-full px-6 py-4 rounded-2xl bg-primary border shadow-inner"
+                            className="w-full px-7 py-4 rounded-2xl bg-primary
+                                       border border-secondary/10 shadow-inner
+                                       focus:outline-none focus:ring-2 focus:ring-accent/40"
                         />
 
                         <input
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             placeholder="Last name"
-                            className="w-full px-6 py-4 rounded-2xl bg-primary border shadow-inner"
+                            className="w-full px-7 py-4 rounded-2xl bg-primary
+                                       border border-secondary/10 shadow-inner
+                                       focus:outline-none focus:ring-2 focus:ring-accent/40"
                         />
 
                         <button
                             onClick={updateUserData}
-                            className="w-full py-4 rounded-2xl bg-accent text-white font-semibold shadow-[0_8px_0_#d8661f]"
+                            className="w-full py-4 rounded-2xl bg-accent text-white
+                                       font-semibold tracking-wide
+                                       shadow-[0_8px_0_#d8661f]
+                                       hover:opacity-95 transition"
                         >
                             Save profile
                         </button>
                     </div>
                 </div>
 
-                {/* SECURITY */}
-                <div className="bg-white/90 backdrop-blur-xl rounded-[36px] p-12 shadow-[0_40px_90px_rgba(0,0,0,0.35)]">
-                    <h2 className="text-3xl font-semibold text-secondary mb-10">
+                {/* ================= SECURITY ================= */}
+                <div className="bg-white/95 backdrop-blur-xl rounded-[40px] p-14
+                                shadow-[0_40px_100px_rgba(0,0,0,0.35)]">
+
+                    <h2 className="text-3xl font-semibold text-secondary mb-12">
                         Security
                     </h2>
 
-                    <div className="space-y-7">
+                    <div className="space-y-8">
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="New password"
-                            className="w-full px-6 py-4 rounded-2xl bg-primary border shadow-inner"
+                            className="w-full px-7 py-4 rounded-2xl bg-primary
+                                       border border-secondary/10 shadow-inner
+                                       focus:outline-none focus:ring-2 focus:ring-secondary/40"
                         />
 
                         <input
@@ -200,14 +227,29 @@ export default function UserSettingPage() {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             placeholder="Confirm password"
-                            className="w-full px-6 py-4 rounded-2xl bg-primary border shadow-inner"
+                            className="w-full px-7 py-4 rounded-2xl bg-primary
+                                       border border-secondary/10 shadow-inner
+                                       focus:outline-none focus:ring-2 focus:ring-secondary/40"
                         />
 
                         <button
                             onClick={updatePassword}
-                            className="w-full py-4 rounded-2xl bg-secondary text-white font-semibold shadow-[0_8px_0_#2b2f35]"
+                            className="w-full py-4 rounded-2xl bg-secondary text-white
+                                       font-semibold tracking-wide
+                                       shadow-[0_8px_0_#2b2f35]
+                                       hover:opacity-95 transition"
                         >
                             Update password
+                        </button>
+
+                        {/* ===== BACK TO HOME ===== */}
+                        <button
+                            onClick={() => navigate("/")}
+                            className="w-full py-3 rounded-2xl border border-secondary
+                                       text-secondary font-semibold tracking-wide
+                                       hover:bg-secondary hover:text-white transition"
+                        >
+                            Back to Home
                         </button>
                     </div>
                 </div>

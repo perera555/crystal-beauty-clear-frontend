@@ -14,7 +14,6 @@ import axios from "axios";
 import { Loader } from "../components/Loader";
 import AdminUsersPage from "./admin/adminUsersPage";
 
-
 export default function AdminPage() {
   const navigate = useNavigate();
   const [userloaded, setUserLoaded] = useState(false);
@@ -48,31 +47,73 @@ export default function AdminPage() {
   }, []);
 
   return (
-    <div className="w-full h-full bg-primary flex p-2 text-secondary">
-      <div className="w-[300px] h-full bg-primary flex flex-col items-center gap-5">
-        <div className="flex w-[90%] h-[70px] bg-accent items-center rounded-2xl mb-5">
-          <img src="logo.png" alt="Admin" className="h-full" />
-          <span className="text-white text-xl ml-4">Admin Panel</span>
+    <div className="w-full h-full bg-primary flex gap-6 p-6 text-secondary">
+
+      {/* ================= SIDEBAR ================= */}
+      <div className="w-[300px] flex flex-col items-center py-6">
+
+        {/* LOGO */}
+        <div className="flex w-[90%] h-[70px] bg-accent items-center rounded-2xl mb-8 px-4 shadow-md">
+          <img src="logo.png" alt="Admin" className="h-full object-contain" />
+          <span className="text-white text-xl font-semibold ml-4">
+            Admin Panel
+          </span>
         </div>
 
-        <Link to="/admin" className="w-[90%] flex items-center gap-2 px-4 hover:bg-accent rounded-lg">
-          <FaChartLine /> Dashboard
-        </Link>
+        {/* NAVIGATION */}
+        <div className="w-full flex flex-col gap-2 items-center">
 
-        <Link to="/admin/orders" className="w-[90%] flex items-center gap-2 px-4 hover:bg-accent rounded-lg">
-          <MdShoppingCartCheckout /> Orders
-        </Link>
+          <Link
+            to="/admin"
+            className="w-[90%] flex items-center gap-3 px-5 py-3 rounded-xl
+                       font-medium transition
+                       hover:bg-accent hover:text-white"
+          >
+            <FaChartLine /> Dashboard
+          </Link>
 
-        <Link to="/admin/products" className="w-[90%] flex items-center gap-2 px-4 hover:bg-accent rounded-lg">
-          <BsBox2Heart /> Products
-        </Link>
+          <Link
+            to="/admin/orders"
+            className="w-[90%] flex items-center gap-3 px-5 py-3 rounded-xl
+                       font-medium transition
+                       hover:bg-accent hover:text-white"
+          >
+            <MdShoppingCartCheckout /> Orders
+          </Link>
 
-        <Link to="/admin/users" className="w-[90%] flex items-center gap-2 px-4 hover:bg-accent rounded-lg">
-          <HiOutlineUsers /> Users
-        </Link>
+          <Link
+            to="/admin/products"
+            className="w-[90%] flex items-center gap-3 px-5 py-3 rounded-xl
+                       font-medium transition
+                       hover:bg-accent hover:text-white"
+          >
+            <BsBox2Heart /> Products
+          </Link>
+
+          <Link
+            to="/admin/users"
+            className="w-[90%] flex items-center gap-3 px-5 py-3 rounded-xl
+                       font-medium transition
+                       hover:bg-accent hover:text-white"
+          >
+            <HiOutlineUsers /> Users
+          </Link>
+        </div>
+
+        {/* BACK TO HOME */}
+        <button
+          onClick={() => navigate("/")}
+          className="mt-auto mb-4 w-[90%] py-3 rounded-xl
+                     border border-secondary text-secondary
+                     font-semibold tracking-wide
+                     hover:bg-secondary hover:text-white transition"
+        >
+          Back to Home
+        </button>
       </div>
 
-      <div className="flex-1 border-2 border-accent rounded-2xl overflow-hidden">
+      {/* ================= CONTENT ================= */}
+      <div className="flex-1 bg-white rounded-3xl shadow-xl border border-accent overflow-hidden">
         {userloaded ? (
           <Routes>
             <Route path="/" element={<AdminDashboard />} />
@@ -80,10 +121,12 @@ export default function AdminPage() {
             <Route path="/orders" element={<AdminOrdersPage />} />
             <Route path="/addproduct" element={<AddProductPage />} />
             <Route path="/updateproduct" element={<UpdateProductPage />} />
-            <Route path="/users" element={<AdminUsersPage/>} />
+            <Route path="/users" element={<AdminUsersPage />} />
           </Routes>
         ) : (
-          <Loader />
+          <div className="w-full h-full flex items-center justify-center">
+            <Loader />
+          </div>
         )}
       </div>
     </div>

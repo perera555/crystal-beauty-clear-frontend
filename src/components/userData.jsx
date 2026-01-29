@@ -38,16 +38,18 @@ export default function UserData() {
   return (
     <div className="flex justify-end items-center px-4 min-h-[56px]">
 
-      {/* Logout Confirmation Modal */}
+      {/* ================= LOGOUT MODAL ================= */}
       {isLogoutconfirmedopen && (
-        <div className="fixed z-[120] h-screen w-full top-0 left-0 bg-black/30 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 flex flex-col items-center shadow-lg">
-            <p className="text-secondary mb-4">
+        <div className="fixed inset-0 z-[120] bg-black/40 flex justify-center items-center">
+          <div className="bg-white rounded-2xl p-8 flex flex-col items-center shadow-2xl w-[320px]">
+            <p className="text-secondary mb-6 text-center font-medium">
               Are you sure you want to logout?
             </p>
-            <div className="flex gap-4">
+
+            <div className="flex gap-4 w-full">
               <button
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+                className="flex-1 bg-red-500 text-white py-2 rounded-lg
+                           hover:bg-red-600 transition font-semibold"
                 onClick={() => {
                   localStorage.removeItem("token");
                   setUser(null);
@@ -57,8 +59,10 @@ export default function UserData() {
               >
                 Yes
               </button>
+
               <button
-                className="bg-gray-300 text-secondary px-4 py-2 rounded-md hover:bg-gray-400 transition"
+                className="flex-1 bg-secondary/10 text-secondary py-2 rounded-lg
+                           hover:bg-secondary/20 transition font-semibold"
                 onClick={() => setIsLogoutconfirmedopen(false)}
               >
                 No
@@ -68,17 +72,21 @@ export default function UserData() {
         </div>
       )}
 
-      {/* Loading Spinner */}
+      {/* ================= LOADING ================= */}
       {loading && (
-        <div className="w-[28px] h-[28px] border-[3px] border-white border-b-transparent rounded-full animate-spin"></div>
+        <div className="w-[28px] h-[28px] border-[3px] border-secondary/30
+                        border-b-accent rounded-full animate-spin">
+        </div>
       )}
 
-      {/* Logged-in User */}
+      {/* ================= LOGGED IN USER ================= */}
       {!loading && user && (
-        <div className="flex items-center gap-3 bg-primary px-3 py-1 rounded-full shadow-sm">
+        <div className="flex items-center gap-3 bg-primary px-4 py-2 rounded-full
+                        shadow-md border border-secondary/10">
 
-          {/* Avatar */}
-          <div className="w-[40px] h-[40px] rounded-full overflow-hidden border-2 border-accent">
+          {/* AVATAR */}
+          <div className="w-[42px] h-[42px] rounded-full overflow-hidden
+                          border-2 border-accent bg-white">
             <img
               src={user.image || TEMP_AVATAR}
               alt="User"
@@ -89,12 +97,12 @@ export default function UserData() {
             />
           </div>
 
-          {/* Name */}
-          <span className="text-secondary font-medium text-sm">
+          {/* NAME */}
+          <span className="text-secondary font-semibold text-sm whitespace-nowrap">
             {user.firstName}
           </span>
 
-          {/* Select */}
+          {/* SELECT */}
           <select
             defaultValue=""
             onChange={(e) => {
@@ -105,7 +113,7 @@ export default function UserData() {
               }
 
               if (value === "orders") {
-                navigate("/orders"); // ✅ CHANGED HERE
+                navigate("/orders");
               }
 
               if (value === "logout") {
@@ -114,35 +122,35 @@ export default function UserData() {
 
               e.target.value = "";
             }}
-            className="h-[30px] bg-accent text-white text-sm px-3 rounded-full cursor-pointer
-                       shadow-md shadow-black/30
-                       focus:outline-none focus:ring-2 focus:ring-accent/50"
+            className="h-[32px] bg-accent text-white text-sm px-4 rounded-full cursor-pointer
+                       shadow-lg shadow-black/20
+                       focus:outline-none focus:ring-2 focus:ring-accent/40"
           >
-            <option value="" disabled className="bg-primary text-secondary text-sm">
+            <option value="" disabled className="bg-primary text-secondary">
               Select
             </option>
 
-            <option value="account" className="bg-primary text-secondary text-sm">
+            <option value="account" className="bg-primary text-secondary">
               Account Setting
             </option>
 
-            <option value="orders" className="bg-primary text-secondary text-sm">
+            <option value="orders" className="bg-primary text-secondary">
               My Orders
             </option>
 
-            <option value="logout" className="bg-primary text-secondary text-sm">
+            <option value="logout" className="bg-primary text-secondary">
               Logout
             </option>
           </select>
         </div>
       )}
 
-      {/* Login Button */}
+      {/* ================= LOGIN BUTTON ================= */}
       {!loading && user == null && (
         <a
           href="/login"
-          className="bg-accent text-white px-4 py-2 rounded-full text-sm font-medium
-                     hover:bg-accent/90 transition shadow-sm"
+          className="bg-accent text-white px-5 py-2 rounded-full text-sm font-semibold
+                     hover:bg-accent/90 transition shadow-md"
         >
           Login
         </a>
