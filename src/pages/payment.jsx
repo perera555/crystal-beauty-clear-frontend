@@ -28,6 +28,7 @@ export default function Payment() {
         const token = localStorage.getItem("token");
         if (!token) {
           setError("Unauthorized");
+          setLoading(false);
           return;
         }
 
@@ -54,7 +55,7 @@ export default function Payment() {
     }
 
     loadOrder();
-  }, []);
+  }, [order]);
 
   /* ===== VALIDATION ===== */
   const validateCard = () => {
@@ -104,7 +105,7 @@ export default function Payment() {
   /* ===== STATES ===== */
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-primary text-secondary">
         Loading payment details…
       </div>
     );
@@ -112,7 +113,7 @@ export default function Payment() {
 
   if (error || !order) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-red-600 bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-primary text-red-600 font-semibold">
         {error || "No order data"}
       </div>
     );
@@ -123,18 +124,19 @@ export default function Payment() {
 
   /* ===== UI ===== */
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-16">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+    <div className="min-h-screen bg-primary px-4 py-16">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14">
 
-        {/* ================= RECEIPT / ORDER ================= */}
-        <div className="bg-white rounded-3xl shadow-xl p-10">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-semibold">
+        {/* ================= ORDER / RECEIPT ================= */}
+        <div className="bg-white rounded-3xl shadow-2xl p-10">
+          <div className="flex justify-between items-center mb-10">
+            <h2 className="text-2xl font-semibold text-secondary tracking-wide">
               {paymentSuccess ? "Payment Receipt" : "Order Overview"}
             </h2>
 
             {paymentSuccess && (
-              <span className="px-4 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold">
+              <span className="px-4 py-1 rounded-full text-xs font-semibold tracking-widest
+                               bg-accent text-white">
                 PAID
               </span>
             )}
@@ -142,44 +144,47 @@ export default function Payment() {
 
           <div className="space-y-6">
             {items.map((item, i) => (
-              <div key={i} className="flex items-center gap-6 border-b pb-6">
+              <div
+                key={i}
+                className="flex gap-6 border-b border-secondary/10 pb-6"
+              >
                 <img
                   src={item.image || "https://via.placeholder.com/120"}
                   alt={item.name}
-                  className="w-24 h-24 rounded-xl object-cover border"
+                  className="w-24 h-24 rounded-2xl object-cover border bg-primary"
                 />
                 <div className="flex-1">
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="font-semibold text-secondary text-lg">
+                    {item.name}
+                  </p>
+                  <p className="text-sm text-secondary/60">
                     Qty: {item.quantity}
                   </p>
                 </div>
-                <p className="font-semibold">
+                <p className="font-semibold text-secondary text-lg">
                   Rs. {(item.price * item.quantity).toFixed(2)}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="border-t mt-8 pt-6 flex justify-between text-xl font-semibold">
+          <div className="flex justify-between items-center mt-10 pt-6 border-t border-secondary/10
+                          text-xl font-semibold text-secondary">
             <span>Total</span>
-            <span className="text-emerald-600">
+            <span className="text-accent">
               Rs. {Number(order.total).toFixed(2)}
             </span>
           </div>
 
           {paymentSuccess && (
-            <div className="mt-8 bg-emerald-50 border border-emerald-200 rounded-2xl p-6 space-y-2">
-              <p className="font-semibold text-emerald-700">
+            <div className="mt-8 rounded-2xl border border-accent/30 bg-accent/10 p-6 space-y-2">
+              <p className="font-semibold text-secondary">
                 Payment Successful
               </p>
-              <p className="text-sm">
-                Order ID: <b>{order.orderID}</b>
+              <p className="text-sm text-secondary/70">
+                Paid at: <b>{paidAt?.toLocaleString()}</b>
               </p>
-              <p className="text-sm">
-                Paid At: <b>{paidAt?.toLocaleString()}</b>
-              </p>
-              <p className="text-sm">
+              <p className="text-sm text-secondary/70">
                 Card: <b>{maskedCard}</b>
               </p>
             </div>
@@ -188,22 +193,23 @@ export default function Payment() {
 
         {/* ================= CARD FORM ================= */}
         {!paymentSuccess && (
-          <div className="bg-white rounded-3xl shadow-xl p-10">
-            <h2 className="text-2xl font-semibold mb-8">
+          <div className="bg-white rounded-3xl shadow-2xl p-10">
+            <h2 className="text-2xl font-semibold text-secondary tracking-wide mb-10">
               Card Details
             </h2>
 
             <div className="space-y-6">
               <input
-                className="w-full h-14 rounded-xl border px-5 focus:ring-2 focus:ring-black"
+                className="w-full h-14 rounded-xl border border-secondary/20 px-5 text-sm
+                           focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="Cardholder Name"
                 value={cardName}
                 onChange={(e) => setCardName(e.target.value)}
               />
 
               <input
-                className="w-full h-14 rounded-xl border px-5 tracking-widest
-                           focus:ring-2 focus:ring-black"
+                className="w-full h-14 rounded-xl border border-secondary/20 px-5 tracking-widest text-sm
+                           focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="Card Number (16 digits)"
                 value={cardNumber}
                 onChange={(e) =>
@@ -213,15 +219,17 @@ export default function Payment() {
                 }
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-5">
                 <input
-                  className="h-14 rounded-xl border px-5 focus:ring-2 focus:ring-black"
+                  className="h-14 rounded-xl border border-secondary/20 px-5 text-sm
+                             focus:outline-none focus:ring-2 focus:ring-accent"
                   placeholder="MM / YY"
                   value={expiry}
                   onChange={(e) => setExpiry(e.target.value)}
                 />
                 <input
-                  className="h-14 rounded-xl border px-5 focus:ring-2 focus:ring-black"
+                  className="h-14 rounded-xl border border-secondary/20 px-5 text-sm
+                             focus:outline-none focus:ring-2 focus:ring-accent"
                   placeholder="CVV"
                   value={cvv}
                   onChange={(e) =>
@@ -233,13 +241,14 @@ export default function Payment() {
 
             <button
               onClick={handlePay}
-              className="mt-10 w-full bg-black text-white py-4 rounded-full
-                         tracking-widest font-semibold hover:opacity-90 transition"
+              className="mt-12 w-full bg-accent text-white py-4 rounded-full
+                         text-sm font-semibold tracking-widest
+                         hover:opacity-90 active:scale-[0.99] transition shadow-lg"
             >
               PAY RS. {Number(order.total).toFixed(2)}
             </button>
 
-            <p className="text-xs text-gray-500 text-center mt-4">
+            <p className="text-xs text-secondary/60 text-center mt-4">
               Attempts left: {MAX_ATTEMPTS - attempts}
             </p>
           </div>

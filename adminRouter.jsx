@@ -1,27 +1,18 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import toast from "react-hot-toast";
+import { Navigate } from "react-router-dom";
 import { usePermission } from "./src/permissionProvider";
 
 
 export default function AdminRouter({ children }) {
   const { isLoggedIn, isAdmin, loading } = usePermission();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!loading && (!isLoggedIn || !isAdmin)) {
-      toast.error("Please login as admin");
-    }
-  }, [loading, isLoggedIn, isAdmin]);
 
   if (loading) return null;
 
   if (!isLoggedIn) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" replace />;
   }
 
   if (!isAdmin) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;

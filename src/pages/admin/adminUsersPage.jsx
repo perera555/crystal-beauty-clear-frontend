@@ -1,11 +1,12 @@
-import axios from "axios"
+import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Loader } from "../../components/Loader";
 import { MdVerified } from "react-icons/md";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 
+/* ================= BLOCK CONFIRM MODAL ================= */
 
 function UesrBlockConfimed(props) {
     const email = props.user.email;
@@ -20,15 +21,21 @@ function UesrBlockConfimed(props) {
             { isblocked: !props.user.isblocked },
             {
                 headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             }
-        ).then(() => {
+        )
+        .then(() => {
             close();
             refresh();
-            toast.success("User Blocked Successfully");
-        }).catch(() => {
-            toast.error("Failed to Block User");
+            toast.success(
+                props.user.isblocked
+                    ? "User Unblocked Successfully"
+                    : "User Blocked Successfully"
+            );
+        })
+        .catch(() => {
+            toast.error("Failed to update user status");
         });
     }
 
@@ -109,36 +116,46 @@ function UesrBlockConfimed(props) {
     );
 }
 
+/* ================= ADMIN USERS PAGE ================= */
+
 export default function AdminUsersPage() {
-    const [users, setUsers] = useState([])
-    const [isblockconfirmvisible, setsIsBlockConfirmVisible] = useState(false)
-    const [userToBlock, setUserToBlock] = useState(null)
-    const [isloding, setIsLoding] = useState(true)
-    const navigate = useNavigate()
+    const [users, setUsers] = useState([]);
+    const [isblockconfirmvisible, setsIsBlockConfirmVisible] = useState(false);
+    const [userToBlock, setUserToBlock] = useState(null);
+    const [isloding, setIsLoding] = useState(true);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (!token) return;
 
-        axios.get(import.meta.env.VITE_API_URL + "/api/users/all-users", {
-            headers: {
-                Authorization: `Bearer ${token}`
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        axios.get(
+            import.meta.env.VITE_API_URL + "/api/users/all",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             }
+        )
+        .then((response) => {
+            setUsers(response.data.users);
+            setIsLoding(false);
         })
-            .then((response) => {
-                setUsers(response.data.users);
-                setIsLoding(false);
-            })
-            .catch(() => {
-                toast.error("Failed to fetch users");
-                setIsLoding(false);
-            });
-    }, [isloding]);
+        .catch(() => {
+            toast.error("Failed to fetch users");
+            setIsLoding(false);
+        });
+    }, [isloding, navigate]);
 
     return (
         <div className="w-full h-full p-8 bg-primary">
 
-            {isblockconfirmvisible && (
+            {isblockconfirmvisible && userToBlock && (
                 <UesrBlockConfimed
                     refresh={() => setIsLoding(true)}
                     user={userToBlock}
@@ -172,28 +189,23 @@ export default function AdminUsersPage() {
                             {users.map((user) => (
                                 <tr
                                     key={user.email}
-                                    className="
-                                        hover:bg-primary/60
-                                        transition
-                                    "
+                                    className="hover:bg-primary/60 transition"
                                 >
                                     <td className="px-8 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <img
-                                                src={user.image}
-                                                alt="user"
-                                                className={`
-                                                    w-14 h-14
-                                                    rounded-full
-                                                    object-cover
-                                                    ring-2
-                                                    shadow-lg
-                                                    ${user.isblocked
-                                                        ? "ring-red-500"
-                                                        : "ring-green-500"}
-                                                `}
-                                            />
-                                        </div>
+                                        <img
+                                            src={user.image}
+                                            alt="user"
+                                            className={`
+                                                w-14 h-14
+                                                rounded-full
+                                                object-cover
+                                                ring-2
+                                                shadow-lg
+                                                ${user.isblocked
+                                                    ? "ring-red-500"
+                                                    : "ring-green-500"}
+                                            `}
+                                        />
                                     </td>
 
                                     <td className="px-8 py-5 font-medium flex items-center gap-2">
@@ -246,5 +258,5 @@ export default function AdminUsersPage() {
                 )}
             </div>
         </div>
-    )
+    );
 }
