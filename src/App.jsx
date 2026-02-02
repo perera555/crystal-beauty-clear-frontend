@@ -18,7 +18,7 @@ import Orders from "./pages/orders";
 import RegisterPage from "./pages/registerPage";
 import ForgetPasswordPage from "./pages/forget-password";
 import UserSettingPage from "./pages/setting";
-import Receipt from "../recipt";
+ // ✅ MUST MATCH FILE NAME EXACTLY
 
 /* ================= PROVIDERS ================= */
 import { Toaster } from "react-hot-toast";
@@ -27,6 +27,7 @@ import { AuthProvider } from "./AuthContext";
 import { PermissionProvider } from "./permissionProvider";
 import AdminRouter from "../AdminRouter";
 import ProtectedRouter from "../proectedRouter";
+import Receipt from "../recipt";
 
 function App() {
   return (
@@ -118,8 +119,9 @@ function App() {
                   }
                 />
 
+                {/* ✅ RECEIPT ROUTE (MATCHES navigate("/receipt")) */}
                 <Route
-                  path="/receipt/:orderId"
+                  path="/receipt"
                   element={
                     <ProtectedRouter>
                       <Receipt />

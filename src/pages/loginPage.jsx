@@ -3,14 +3,21 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useAuth } from "../AuthContext"; // ✅ FIXED IMPORT
+import { useAuth } from "../AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const { setUser } = useAuth(); // ✅ SYNC LOGIN WITH CONTEXT
+  const { setUser } = useAuth();
+
+  /* ================= ENTER KEY FIX ================= */
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      login();
+    }
+  }
 
   /* ================= GOOGLE LOGIN ================= */
   const googleLogin = useGoogleLogin({
@@ -22,7 +29,7 @@ export default function LoginPage() {
         );
 
         localStorage.setItem("token", res.data.token);
-        setUser(res.data.user); // ✅ IMPORTANT
+        setUser(res.data.user);
 
         if (res.data.user.role === "admin") {
           navigate("/admin");
@@ -45,7 +52,7 @@ export default function LoginPage() {
       );
 
       localStorage.setItem("token", response.data.token);
-      setUser(response.data.user); // ✅ IMPORTANT
+      setUser(response.data.user);
 
       toast.success("Login successful");
 
@@ -98,6 +105,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Enter your email"
               className="w-full h-12 mt-2 px-4 rounded-xl bg-white/90 text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all"
             />
@@ -111,6 +119,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Enter your password"
               className="w-full h-12 mt-2 px-4 rounded-xl bg-white/90 text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all"
             />
@@ -159,4 +168,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

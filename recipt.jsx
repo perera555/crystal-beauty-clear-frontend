@@ -1,161 +1,146 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Receipt() {
-  const { orderId } = useParams();
+  const { state } = useLocation();
   const navigate = useNavigate();
 
-  const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function fetchReceipt() {
-      try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          setError("Please login to view receipt");
-          setLoading(false);
-          return;
-        }
-
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/orders/${orderId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        const data = res.data?.order || res.data;
-
-        if (!data) {
-          setError("Order not found");
-          return;
-        }
-
-        if (data.paymentStatus !== "PAID") {
-          setError("Access denied");
-          return;
-        }
-
-        setOrder(data);
-      } catch (err) {
-        setError("Failed to load receipt");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchReceipt();
-  }, [orderId]);
-
-  if (loading) {
+  if (!state) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-primary text-secondary">
-        Loading receipt…
+        No receipt data found
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-primary text-red-600 font-medium gap-6">
-        <p>{error}</p>
-        <button
-          onClick={() => navigate("/")}
-          className="px-6 py-2 rounded bg-accent text-white"
-        >
-          Go Home
-        </button>
-      </div>
-    );
-  }
-
-  if (!order) return null;
-
+  const { order, paidAt, card } = state;
   const items = order.items || order.Item || [];
 
-  return (
-    <div className="min-h-screen bg-primary px-4 py-16 flex justify-center">
-      <div className="w-full max-w-5xl">
-        <div className="bg-white rounded-3xl shadow-2xl p-10 border border-secondary/10">
+  /* ===== DERIVED DATA (NO LOGIC CHANGE) ===== */
+  const invoiceId =
+    order._id || `INV-${new Date(paidAt).getTime()}`;
 
-          {/* HEADER */}
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-semibold text-secondary tracking-wide">
-              Official Receipt
-            </h2>
-            <span className="px-6 py-2 rounded-full text-xs font-semibold tracking-widest bg-green-600 text-white shadow">
-              PAID
-            </span>
+  const customerName =
+    order.user?.name || order.customerName || "Valued Customer";
+
+  /* ===== QR CODE (NO LIBRARY) ===== */
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${invoiceId}`;
+
+  return (
+    <div className="min-h-screen bg-primary px-4 py-16 print:bg-white">
+      <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-10 print:shadow-none print:rounded-none">
+
+        {/* ===== COMPANY HEADER ===== */}
+        <div className="flex flex-col items-center text-center mb-10">
+          <img
+            src="https://via.placeholder.com/180x60?text=Crystal+Beauty"
+            alt="Company Logo"
+            className="mb-6"
+          />
+
+          <p className="text-sm text-secondary/70">
+            Crystal Beauty Pvt Ltd<br />
+            123 Main Street, Colombo, Sri Lanka<br />
+            Tax ID: <b>TX-98456321</b>
+          </p>
+
+          <span
+            className="mt-4 px-4 py-1 rounded-full text-xs font-semibold tracking-widest text-white"
+            style={{ backgroundColor: "#FA812F" }}
+          >
+            PAID
+          </span>
+        </div>
+
+        {/* ===== INVOICE META ===== */}
+        <div className="grid grid-cols-2 gap-6 mb-10 text-sm text-secondary">
+          <div>
+            <p><b>Invoice ID</b></p>
+            <p className="text-secondary/70">{invoiceId}</p>
           </div>
 
-          {/* BODY */}
-          <div className="border rounded-2xl p-8 text-sm text-secondary">
-            <div className="flex justify-between mb-8">
-              <span className="font-medium">
-                Receipt #{order.orderID || order._id}
-              </span>
-              <span className="text-secondary/60">
-                {new Date(order.createdAt || Date.now()).toLocaleDateString()}
-              </span>
-            </div>
+          <div className="text-right">
+            <p><b>Paid At</b></p>
+            <p className="text-secondary/70">
+              {new Date(paidAt).toLocaleString()}
+            </p>
+          </div>
+        </div>
 
-            <div className="mb-8 space-y-1">
-              <p>
-                <span className="font-medium">Customer:</span>{" "}
-                {order.customerName || "N/A"}
+        {/* ===== CUSTOMER ===== */}
+        <div className="mb-10 border border-secondary/10 rounded-xl p-6">
+          <p className="text-sm text-secondary/60 mb-1">Billed To</p>
+          <p className="font-semibold text-secondary">
+            {customerName}
+          </p>
+        </div>
+
+        {/* ===== ITEMS ===== */}
+        <div className="space-y-6">
+          {items.map((item, i) => (
+            <div
+              key={i}
+              className="flex justify-between border-b border-secondary/10 pb-4"
+            >
+              <div>
+                <p className="font-semibold text-secondary">
+                  {item.name}
+                </p>
+                <p className="text-sm text-secondary/60">
+                  Qty: {item.quantity}
+                </p>
+              </div>
+
+              <p className="font-semibold text-secondary">
+                Rs. {(item.price * item.quantity).toFixed(2)}
               </p>
-              <p>
-                <span className="font-medium">Address:</span>{" "}
-                {order.address || "N/A"}
-              </p>
             </div>
+          ))}
+        </div>
 
-            <div className="border-y py-6 mb-8 space-y-3">
-              {items.map((item, index) => (
-                <div key={index} className="flex justify-between">
-                  <span>
-                    {item.name} × {item.quantity}
-                  </span>
-                  <span className="font-medium">
-                    Rs. {(item.price * item.quantity).toFixed(2)}
-                  </span>
-                </div>
-              ))}
-            </div>
+        {/* ===== TOTAL ===== */}
+        <div className="flex justify-between text-xl font-semibold mt-10 pt-6 border-t border-secondary/10">
+          <span>Total</span>
+          <span className="text-accent">
+            Rs. {Number(order.total).toFixed(2)}
+          </span>
+        </div>
 
-            <div className="flex justify-between text-lg font-semibold">
-              <span>Total Paid</span>
-              <span className="text-accent">
-                Rs. {Number(order.total || 0).toFixed(2)}
-              </span>
-            </div>
-
-            <p className="mt-10 text-center text-secondary/60">
-              Thank you for your purchase 🙏
+        {/* ===== PAYMENT INFO ===== */}
+        <div className="mt-8 grid grid-cols-2 gap-6 items-center">
+          <div className="rounded-xl border border-accent/30 bg-accent/10 p-6">
+            <p className="text-secondary">
+              <b>Payment Method</b>
+            </p>
+            <p className="tracking-widest text-secondary/80 mt-1">
+              {card}
             </p>
           </div>
 
-          {/* ACTIONS */}
-          <div className="mt-12 flex justify-center gap-6">
-            <button
-              onClick={() => navigate("/orders")}
-              className="px-10 py-3 rounded-full bg-accent text-white font-semibold tracking-widest hover:opacity-90 transition shadow"
-            >
-              VIEW ORDERS
-            </button>
-
-            <button
-              onClick={() => navigate("/")}
-              className="px-10 py-3 rounded-full border border-secondary text-secondary font-semibold tracking-widest hover:bg-secondary hover:text-white transition"
-            >
-              HOME
-            </button>
+          <div className="text-center">
+            <img src={qrUrl} alt="Invoice QR Code" className="mx-auto" />
+            <p className="text-xs text-secondary/60 mt-2">
+              Scan for Invoice
+            </p>
           </div>
+        </div>
 
+        {/* ===== ACTIONS ===== */}
+        <div className="mt-12 flex gap-4 print:hidden">
+          <button
+            onClick={() => window.print()}
+            className="flex-1 bg-accent text-white py-4 rounded-full
+                       text-sm font-semibold tracking-widest shadow-lg"
+          >
+            DOWNLOAD PDF
+          </button>
+
+          <button
+            onClick={() => navigate("/")}
+            className="flex-1 border border-secondary/20 py-4 rounded-full
+                       text-sm font-semibold tracking-widest"
+          >
+            HOME
+          </button>
         </div>
       </div>
     </div>
