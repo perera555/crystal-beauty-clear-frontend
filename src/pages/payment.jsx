@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Payment() {
   const location = useLocation();
@@ -9,12 +10,22 @@ export default function Payment() {
   const [order, setOrder] = useState(location.state || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paidAt, setPaidAt] = useState(null);
+
+  /* ===== CARD STATE ===== */
+  const [cardName, setCardName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
+
+  const [attempts, setAttempts] = useState(0);
+  const MAX_ATTEMPTS = 3;
 
   useEffect(() => {
-    async function fetchLatestOrder() {
+    async function loadOrder() {
       try {
         const token = localStorage.getItem("token");
-
         if (!token) {
           setError("Unauthorized");
           return;
@@ -27,11 +38,7 @@ export default function Payment() {
 
         const res = await axios.get(
           import.meta.env.VITE_API_URL + "/api/orders",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         if (Array.isArray(res.data) && res.data.length > 0) {
@@ -39,154 +46,204 @@ export default function Payment() {
         } else {
           setError("No order found");
         }
-      } catch (err) {
-        setError("Failed to load payment data");
+      } catch {
+        setError("Failed to load order");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchLatestOrder();
+    loadOrder();
   }, []);
 
+  /* ===== VALIDATION ===== */
+  const validateCard = () => {
+    if (!cardName || !cardNumber || !expiry || !cvv) {
+      toast.error("Please fill all card details");
+      return false;
+    }
+
+    if (!/^\d{16}$/.test(cardNumber)) {
+      toast.error("Card number must be exactly 16 digits");
+      return false;
+    }
+
+    if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+      toast.error("Expiry must be MM/YY");
+      return false;
+    }
+
+    if (!/^\d{3,4}$/.test(cvv)) {
+      toast.error("Invalid CVV");
+      return false;
+    }
+
+    return true;
+  };
+
+  /* ===== PAYMENT ===== */
+  const handlePay = () => {
+    if (!validateCard()) {
+      const next = attempts + 1;
+      setAttempts(next);
+
+      if (next >= MAX_ATTEMPTS) {
+        toast.error("Too many failed attempts. Redirecting to home.");
+        setTimeout(() => navigate("/"), 2000);
+      } else {
+        toast.error(`Payment failed. Attempts left: ${MAX_ATTEMPTS - next}`);
+      }
+      return;
+    }
+
+    toast.success("Payment successful 🎉");
+    setPaidAt(new Date());
+    setPaymentSuccess(true);
+  };
+
+  /* ===== STATES ===== */
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-primary text-secondary">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
         Loading payment details…
       </div>
     );
   }
 
-  if (error) {
+  if (error || !order) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-primary text-red-600">
-        {error}
-      </div>
-    );
-  }
-
-  if (!order) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-primary text-secondary">
-        No payment data available
+      <div className="min-h-screen flex items-center justify-center text-red-600 bg-gray-100">
+        {error || "No order data"}
       </div>
     );
   }
 
   const items = order.items || order.Item || [];
+  const maskedCard = `**** **** **** ${cardNumber.slice(-4)}`;
 
+  /* ===== UI ===== */
   return (
-    <div className="min-h-screen bg-primary px-4 py-14 flex justify-center">
-      <div className="w-full max-w-5xl space-y-12">
+    <div className="min-h-screen bg-gray-100 px-4 py-16">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
 
-        {/* ================= PAYMENT ================= */}
-        <div className="bg-white rounded-3xl shadow-2xl p-10">
-          <h1 className="text-3xl font-semibold text-secondary mb-2">
-            Secure Payment
-          </h1>
-          <p className="text-secondary/60 mb-8">
-            Complete payment to receive your receipt
-          </p>
-
-          <div className="grid sm:grid-cols-2 gap-6 text-sm mb-8">
-            <p><b>Order ID:</b> {order.orderID}</p>
-            <p><b>Customer:</b> {order.customerName}</p>
-            <p className="sm:col-span-2">
-              <b>Address:</b> {order.address}
-            </p>
-          </div>
-
-          <div className="bg-primary rounded-2xl p-6 mb-8">
-            <h2 className="font-semibold text-secondary mb-4">
-              Order Summary
+        {/* ================= RECEIPT / ORDER ================= */}
+        <div className="bg-white rounded-3xl shadow-xl p-10">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-semibold">
+              {paymentSuccess ? "Payment Receipt" : "Order Overview"}
             </h2>
 
-            {items.map((item, index) => (
-              <div key={index} className="flex justify-between text-sm mb-2">
-                <span>{item.name} × {item.quantity}</span>
-                <span>Rs. {(item.price * item.quantity).toFixed(2)}</span>
+            {paymentSuccess && (
+              <span className="px-4 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold">
+                PAID
+              </span>
+            )}
+          </div>
+
+          <div className="space-y-6">
+            {items.map((item, i) => (
+              <div key={i} className="flex items-center gap-6 border-b pb-6">
+                <img
+                  src={item.image || "https://via.placeholder.com/120"}
+                  alt={item.name}
+                  className="w-24 h-24 rounded-xl object-cover border"
+                />
+                <div className="flex-1">
+                  <p className="font-semibold">{item.name}</p>
+                  <p className="text-sm text-gray-500">
+                    Qty: {item.quantity}
+                  </p>
+                </div>
+                <p className="font-semibold">
+                  Rs. {(item.price * item.quantity).toFixed(2)}
+                </p>
               </div>
             ))}
-
-            <div className="border-t border-secondary/20 mt-4 pt-4 flex justify-between text-lg font-semibold">
-              <span>Total</span>
-              <span className="text-accent">
-                Rs. {Number(order.total).toFixed(2)}
-              </span>
-            </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-5 mb-8">
-            <input className="h-12 border rounded-lg px-4 focus:ring-2 focus:ring-accent" placeholder="Cardholder Name" />
-            <input className="h-12 border rounded-lg px-4 focus:ring-2 focus:ring-accent" placeholder="Card Number" />
-            <input className="h-12 border rounded-lg px-4 focus:ring-2 focus:ring-accent" placeholder="MM / YY" />
-            <input className="h-12 border rounded-lg px-4 focus:ring-2 focus:ring-accent" placeholder="CVV" />
-          </div>
-
-          <button
-            onClick={() => navigate("/orders")}
-            className="w-full bg-accent text-white py-4 rounded-full font-semibold tracking-widest hover:opacity-90 transition shadow-lg"
-          >
-            PAY RS. {Number(order.total).toFixed(2)}
-          </button>
-        </div>
-
-        {/* ================= RECEIPT ================= */}
-        <div className="bg-white rounded-3xl shadow-xl p-10 border border-secondary/10">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold text-secondary">
-              Official Receipt
-            </h2>
-            <span className="px-5 py-2 rounded-full text-xs font-semibold tracking-widest bg-accent text-white">
-              PAID
+          <div className="border-t mt-8 pt-6 flex justify-between text-xl font-semibold">
+            <span>Total</span>
+            <span className="text-emerald-600">
+              Rs. {Number(order.total).toFixed(2)}
             </span>
           </div>
 
-          <div className="border rounded-2xl p-8 text-sm">
-            <div className="flex justify-between mb-6">
-              <span><b>Receipt #</b> {order.orderID}</span>
-              <span><b>Date</b> {new Date().toLocaleDateString()}</span>
+          {paymentSuccess && (
+            <div className="mt-8 bg-emerald-50 border border-emerald-200 rounded-2xl p-6 space-y-2">
+              <p className="font-semibold text-emerald-700">
+                Payment Successful
+              </p>
+              <p className="text-sm">
+                Order ID: <b>{order.orderID}</b>
+              </p>
+              <p className="text-sm">
+                Paid At: <b>{paidAt?.toLocaleString()}</b>
+              </p>
+              <p className="text-sm">
+                Card: <b>{maskedCard}</b>
+              </p>
             </div>
-
-            <div className="mb-6">
-              <p><b>Customer:</b> {order.customerName}</p>
-              <p><b>Address:</b> {order.address}</p>
-            </div>
-
-            <div className="border-t border-b py-6 mb-6">
-              {items.map((item, index) => (
-                <div key={index} className="flex justify-between mb-2">
-                  <span>{item.name} × {item.quantity}</span>
-                  <span>Rs. {(item.price * item.quantity).toFixed(2)}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex justify-between text-lg font-semibold">
-              <span>Total Paid</span>
-              <span className="text-accent">
-                Rs. {Number(order.total).toFixed(2)}
-              </span>
-            </div>
-
-            <p className="mt-8 text-center text-secondary/60">
-              Thank you for your purchase 🙏
-            </p>
-          </div>
-
-          {/* ===== BACK TO HOME ===== */}
-          <div className="mt-10 flex justify-center">
-            <button
-              onClick={() => navigate("/")}
-              className="px-10 py-3 rounded-full border border-secondary text-secondary
-                         font-semibold tracking-widest hover:bg-secondary hover:text-white
-                         transition"
-            >
-              BACK TO HOME
-            </button>
-          </div>
+          )}
         </div>
 
+        {/* ================= CARD FORM ================= */}
+        {!paymentSuccess && (
+          <div className="bg-white rounded-3xl shadow-xl p-10">
+            <h2 className="text-2xl font-semibold mb-8">
+              Card Details
+            </h2>
+
+            <div className="space-y-6">
+              <input
+                className="w-full h-14 rounded-xl border px-5 focus:ring-2 focus:ring-black"
+                placeholder="Cardholder Name"
+                value={cardName}
+                onChange={(e) => setCardName(e.target.value)}
+              />
+
+              <input
+                className="w-full h-14 rounded-xl border px-5 tracking-widest
+                           focus:ring-2 focus:ring-black"
+                placeholder="Card Number (16 digits)"
+                value={cardNumber}
+                onChange={(e) =>
+                  setCardNumber(
+                    e.target.value.replace(/\D/g, "").slice(0, 16)
+                  )
+                }
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <input
+                  className="h-14 rounded-xl border px-5 focus:ring-2 focus:ring-black"
+                  placeholder="MM / YY"
+                  value={expiry}
+                  onChange={(e) => setExpiry(e.target.value)}
+                />
+                <input
+                  className="h-14 rounded-xl border px-5 focus:ring-2 focus:ring-black"
+                  placeholder="CVV"
+                  value={cvv}
+                  onChange={(e) =>
+                    setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
+                  }
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handlePay}
+              className="mt-10 w-full bg-black text-white py-4 rounded-full
+                         tracking-widest font-semibold hover:opacity-90 transition"
+            >
+              PAY RS. {Number(order.total).toFixed(2)}
+            </button>
+
+            <p className="text-xs text-gray-500 text-center mt-4">
+              Attempts left: {MAX_ATTEMPTS - attempts}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

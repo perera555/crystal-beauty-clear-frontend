@@ -5,55 +5,59 @@ export default function ProductCard(props) {
 
   return (
     <div
-      className="w-full sm:w-[260px] lg:w-[300px]
-                 bg-primary
-                 border border-secondary/10
-                 m-3
-                 flex flex-col p-4 rounded-2xl
-                 shadow-[0_12px_32px_rgba(57,62,70,0.08)]
-                 hover:shadow-[0_28px_60px_rgba(57,62,70,0.18)]
-                 transition-all duration-500"
+      className="
+        group
+        bg-primary
+        border border-secondary/10
+        rounded-3xl
+        p-5
+        flex flex-col
+        shadow-[0_18px_45px_rgba(57,62,70,0.10)]
+        hover:shadow-[0_30px_70px_rgba(57,62,70,0.20)]
+        transition-all duration-700
+      "
     >
       {/* Image */}
-      <div className="overflow-hidden rounded-xl">
+      <div className="overflow-hidden rounded-2xl bg-primary">
         <img
-          className="w-full h-[180px] sm:h-[220px] lg:h-[250px]
-                     object-cover
-                     transition-transform duration-700
-                     hover:scale-105"
           src={product.images[0]}
-          alt=""
+          alt={product.name}
+          className="
+            w-full h-[220px]
+            object-cover
+            transition-transform duration-[900ms]
+            group-hover:scale-105
+          "
         />
       </div>
 
       {/* Name */}
-      <h1 className="text-base lg:text-lg font-medium tracking-wide
-                     text-secondary mt-4 line-clamp-2">
+      <h2 className="mt-5 text-[15px] font-medium tracking-wide text-secondary line-clamp-2">
         {product.name}
-      </h1>
+      </h2>
 
       {/* Price */}
       {product.labelledPrice > product.price ? (
-        <div className="flex gap-3 items-center mt-2">
-          <p className="text-sm text-secondary/50 font-light line-through">
+        <div className="flex items-center gap-3 mt-3">
+          <span className="text-xs text-secondary/50 line-through">
             LKR {Number(product.labelledPrice).toFixed(2)}
-          </p>
-          <p className="text-base text-accent font-semibold">
+          </span>
+          <span className="text-base font-semibold text-accent">
             LKR {Number(product.price).toFixed(2)}
-          </p>
+          </span>
         </div>
       ) : (
-        <p className="text-base text-accent font-semibold mt-2">
+        <p className="mt-3 text-base font-semibold text-accent">
           LKR {Number(product.price).toFixed(2)}
         </p>
       )}
 
       {/* Meta */}
-      <div className="mt-2 space-y-0.5">
-        <p className="text-[11px] uppercase tracking-widest text-secondary/40">
+      <div className="mt-3 space-y-1">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-secondary/50">
           {product.productID}
         </p>
-        <p className="text-[11px] uppercase tracking-widest text-secondary/40">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-secondary/50">
           {product.category}
         </p>
       </div>
@@ -61,16 +65,18 @@ export default function ProductCard(props) {
       {/* Button */}
       <Link
         to={"/overview/" + product.productID}
-        className="w-full h-[42px] mt-4
-                   flex items-center justify-center
-                   border border-secondary/30
-                   text-secondary
-                   rounded-full
-                   text-sm tracking-wide
-                   hover:bg-accent hover:text-primary
-                   transition-all duration-300"
+        className="
+          mt-6 h-[44px]
+          flex items-center justify-center
+          rounded-full
+          border border-secondary/30
+          text-sm tracking-widest
+          text-secondary
+          transition-all duration-300
+          hover:bg-accent hover:text-primary hover:border-accent
+        "
       >
-        View Product
+        VIEW PRODUCT
       </Link>
     </div>
   );

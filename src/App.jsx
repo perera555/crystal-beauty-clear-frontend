@@ -18,134 +18,80 @@ import Orders from "./pages/orders";
 import RegisterPage from "./pages/registerPage";
 import ForgetPasswordPage from "./pages/forget-password";
 import UserSettingPage from "./pages/setting";
+import Receipt from "../recipt";
+
+/* ================= CONTEXT ================= */
+
+
+
 
 /* ================= PROVIDERS ================= */
 import { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
-/* ================= AUTH ================= */
 import { AuthProvider } from "./AuthContext";
-import ProtectedRoute from "./ProtectedRoute";
-import AdminRoute from "./AdminRoute";
+import { PermissionProvider } from "./permissionProvider";
+import AdminRouter from "../AdminRouter";
 
 function App() {
   return (
-    <BrowserRouter>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-        <AuthProvider>
-          <div className="w-full min-h-screen">
-            <Toaster position="top-right" />
+    <AuthProvider>
+      <PermissionProvider>
+        <BrowserRouter>
+          <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+            <div className="w-full min-h-screen">
+              <Toaster position="top-right" />
 
-            <Routes>
-              {/* ===== PUBLIC ===== */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/forgot-password" element={<ForgetPasswordPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
+              <Routes>
+                {/* ===== PUBLIC ===== */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route
+                  path="/forgot-password"
+                  element={<ForgetPasswordPage />}
+                />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
 
-              {/* ===== AUTHENTICATED ===== */}
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <HomePage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* ===== PAYMENT ===== */}
+                <Route path="/payment" element={<Payment />} />
+                <Route path="/payment/:orderId" element={<Payment />} />
 
-              <Route
-                path="/products"
-                element={
-                  <ProtectedRoute>
-                    <ProductPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* ===== PRODUCTS ===== */}
+                <Route path="/products" element={<ProductPage />} />
+                <Route path="/overview/:id" element={<ProductOverView />} />
+                <Route path="/review/:id" element={<ReviewPage />} />
 
-              <Route
-                path="/overview/:id"
-                element={
-                  <ProtectedRoute>
-                    <ProductOverView />
-                  </ProtectedRoute>
-                }
-              />
+                {/* ===== CART / ORDER ===== */}
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/receipt/:orderId" element={<Receipt />} />
 
-              <Route
-                path="/cart"
-                element={
-                  <ProtectedRoute>
-                    <CartPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* ===== USER ===== */}
+                <Route path="/setting" element={<UserSettingPage />} />
 
-              <Route
-                path="/checkout"
-                element={
-                  <ProtectedRoute>
-                    <CheckoutPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* ===== ADMIN (PROTECTED) ===== */}
+                <Route
+                  path="/admin/*"
+                  element={
+                    <AdminRouter>
+                      <AdminPage />
+                    </AdminRouter>
+                  }
+                />
 
-              <Route
-                path="/payment"
-                element={
-                  <ProtectedRoute>
-                    <Payment />
-                  </ProtectedRoute>
-                }
-              />
+                {/* ===== OTHER ===== */}
+                <Route path="/test" element={<TestPage />} />
 
-              <Route
-                path="/orders"
-                element={
-                  <ProtectedRoute>
-                    <Orders />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route
-                path="/setting"
-                element={
-                  <ProtectedRoute>
-                    <UserSettingPage />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route
-                path="/review/:id"
-                element={
-                  <ProtectedRoute>
-                    <ReviewPage />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* ===== ADMIN ONLY ===== */}
-              <Route
-                path="/admin/*"
-                element={
-                  <AdminRoute>
-                    <AdminPage />
-                  </AdminRoute>
-                }
-              />
-
-              {/* ===== OTHER ===== */}
-              <Route path="/test" element={<TestPage />} />
-
-              {/* ===== FALLBACK ===== */}
-              <Route path="*" element={<HomePage />} />
-            </Routes>
-          </div>
-        </AuthProvider>
-      </GoogleOAuthProvider>
-    </BrowserRouter>
+                {/* ===== FALLBACK ===== */}
+                <Route path="*" element={<HomePage />} />
+              </Routes>
+            </div>
+          </GoogleOAuthProvider>
+        </BrowserRouter>
+      </PermissionProvider>
+    </AuthProvider>
   );
 }
 

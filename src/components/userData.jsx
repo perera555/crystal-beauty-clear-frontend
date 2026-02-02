@@ -14,15 +14,13 @@ export default function UserData() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (token != null) {
+    if (token) {
       axios
         .get(import.meta.env.VITE_API_URL + "/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          setUser(res.data);
+          setUser(res.data.user ?? res.data);
           setLoading(false);
         })
         .catch(() => {
@@ -38,32 +36,34 @@ export default function UserData() {
   return (
     <div className="flex justify-end items-center px-4 min-h-[56px]">
 
-      {/* ================= LOGOUT MODAL ================= */}
+      {/* LOGOUT MODAL */}
       {isLogoutconfirmedopen && (
         <div className="fixed inset-0 z-[120] bg-black/40 flex justify-center items-center">
-          <div className="bg-white rounded-2xl p-8 flex flex-col items-center shadow-2xl w-[320px]">
+          <div className="bg-primary rounded-2xl p-8 w-[320px] shadow-xl">
             <p className="text-secondary mb-6 text-center font-medium">
               Are you sure you want to logout?
             </p>
 
-            <div className="flex gap-4 w-full">
+            <div className="flex gap-4">
               <button
-                className="flex-1 bg-red-500 text-white py-2 rounded-lg
-                           hover:bg-red-600 transition font-semibold"
                 onClick={() => {
                   localStorage.removeItem("token");
                   setUser(null);
                   setIsLogoutconfirmedopen(false);
                   window.location.href = "/login";
                 }}
+                className="flex-1 bg-accent text-primary py-2 rounded-lg
+                           font-semibold hover:bg-accent/90
+                           focus:outline-none focus:ring-2 focus:ring-accent/40"
               >
                 Yes
               </button>
 
               <button
-                className="flex-1 bg-secondary/10 text-secondary py-2 rounded-lg
-                           hover:bg-secondary/20 transition font-semibold"
                 onClick={() => setIsLogoutconfirmedopen(false)}
+                className="flex-1 bg-secondary/10 text-secondary py-2 rounded-lg
+                           font-semibold hover:bg-secondary/20
+                           focus:outline-none focus:ring-2 focus:ring-accent/40"
               >
                 No
               </button>
@@ -72,72 +72,61 @@ export default function UserData() {
         </div>
       )}
 
-      {/* ================= LOADING ================= */}
+      {/* LOADING */}
       {loading && (
-        <div className="w-[28px] h-[28px] border-[3px] border-secondary/30
-                        border-b-accent rounded-full animate-spin">
-        </div>
+        <div className="w-[28px] h-[28px] border-[3px]
+                        border-secondary/30 border-t-accent
+                        rounded-full animate-spin" />
       )}
 
-      {/* ================= LOGGED IN USER ================= */}
+      {/* USER */}
       {!loading && user && (
-        <div className="flex items-center gap-3 bg-primary px-4 py-2 rounded-full
-                        shadow-md border border-secondary/10">
+        <div className="flex items-center gap-3 bg-primary px-4 py-2
+                        rounded-full shadow-md border border-secondary/10">
 
-          {/* AVATAR */}
           <div className="w-[42px] h-[42px] rounded-full overflow-hidden
                           border-2 border-accent bg-white">
             <img
               src={user.image || TEMP_AVATAR}
               alt="User"
               className="w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.src = TEMP_AVATAR;
-              }}
+              onError={(e) => (e.currentTarget.src = TEMP_AVATAR)}
             />
           </div>
 
-          {/* NAME */}
-          <span className="text-secondary font-semibold text-sm whitespace-nowrap">
+          <span className="text-secondary font-semibold text-sm">
             {user.firstName}
           </span>
 
-          {/* SELECT */}
           <select
             defaultValue=""
             onChange={(e) => {
               const value = e.target.value;
-
-              if (value === "account") {
-                navigate("/setting");
-              }
-
-              if (value === "orders") {
-                navigate("/orders");
-              }
-
-              if (value === "logout") {
-                setIsLogoutconfirmedopen(true);
-              }
-
+              if (value === "account") navigate("/setting");
+              if (value === "orders") navigate("/orders");
+              if (value === "logout") setIsLogoutconfirmedopen(true);
               e.target.value = "";
             }}
-            className="h-[32px] bg-accent text-white text-sm px-4 rounded-full cursor-pointer
-                       shadow-lg shadow-black/20
-                       focus:outline-none focus:ring-2 focus:ring-accent/40"
+            className="
+              h-[32px] px-4 text-sm rounded-full
+              bg-primary text-secondary
+              border border-secondary/30
+              appearance-none cursor-pointer
+              outline-none
+              focus:outline-none
+              focus:ring-2 focus:ring-accent/40
+              focus:border-accent
+            "
           >
             <option value="" disabled className="bg-primary text-secondary">
               Select
             </option>
-
             <option value="account" className="bg-primary text-secondary">
               Account Setting
             </option>
-
             <option value="orders" className="bg-primary text-secondary">
               My Orders
             </option>
-
             <option value="logout" className="bg-primary text-secondary">
               Logout
             </option>
@@ -145,12 +134,14 @@ export default function UserData() {
         </div>
       )}
 
-      {/* ================= LOGIN BUTTON ================= */}
-      {!loading && user == null && (
+      {/* LOGIN */}
+      {!loading && !user && (
         <a
           href="/login"
-          className="bg-accent text-white px-5 py-2 rounded-full text-sm font-semibold
-                     hover:bg-accent/90 transition shadow-md"
+          className="bg-accent text-primary px-5 py-2 rounded-full
+                     text-sm font-semibold hover:bg-accent/90
+                     focus:outline-none focus:ring-2 focus:ring-accent/40
+                     transition shadow-md"
         >
           Login
         </a>

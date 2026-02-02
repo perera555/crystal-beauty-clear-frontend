@@ -34,7 +34,7 @@ export default function Orders() {
         } else {
           setOrder(null);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load order");
       } finally {
         setLoading(false);
@@ -72,6 +72,19 @@ export default function Orders() {
 
   const items = order.Item || order.items || [];
 
+  /* ================= ACTION ================= */
+
+  const handleConfirmPay = () => {
+    // ✅ If already paid → go to receipt
+    if (order.paymentStatus === "PAID") {
+      navigate(`/receipt/${order.orderID}`);
+      return;
+    }
+
+    // ❌ Not paid → must go through payment
+    navigate("/payment", { state: order });
+  };
+
   /* ================= UI ================= */
 
   return (
@@ -103,39 +116,23 @@ export default function Orders() {
 
           <div className="grid sm:grid-cols-2 gap-x-12 gap-y-6 text-secondary">
             <div>
-              <p className="text-xs uppercase tracking-widest text-secondary/50">
-                Name
-              </p>
-              <p className="text-base font-medium">
-                {order.customerName || "-"}
-              </p>
+              <p className="text-xs uppercase tracking-widest text-secondary/50">Name</p>
+              <p className="text-base font-medium">{order.customerName || "-"}</p>
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-widest text-secondary/50">
-                Email
-              </p>
-              <p className="text-base font-medium">
-                {order.email || "-"}
-              </p>
+              <p className="text-xs uppercase tracking-widest text-secondary/50">Email</p>
+              <p className="text-base font-medium">{order.email || "-"}</p>
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-widest text-secondary/50">
-                Phone
-              </p>
-              <p className="text-base font-medium">
-                {order.phone || "-"}
-              </p>
+              <p className="text-xs uppercase tracking-widest text-secondary/50">Phone</p>
+              <p className="text-base font-medium">{order.phone || "-"}</p>
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-widest text-secondary/50">
-                Address
-              </p>
-              <p className="text-base font-medium leading-relaxed">
-                {order.address || "-"}
-              </p>
+              <p className="text-xs uppercase tracking-widest text-secondary/50">Address</p>
+              <p className="text-base font-medium leading-relaxed">{order.address || "-"}</p>
             </div>
           </div>
         </div>
@@ -148,43 +145,24 @@ export default function Orders() {
 
           <div className="space-y-12">
             {items.map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-col md:flex-row gap-10 items-center md:items-start"
-              >
-                {/* IMAGE */}
-                <div className="w-44 h-44 rounded-2xl overflow-hidden border border-secondary/10 bg-primary shadow-sm">
+              <div key={index} className="flex flex-col md:flex-row gap-10 items-center">
+                <div className="w-44 h-44 rounded-2xl overflow-hidden border bg-primary">
                   <img
-                    src={
-                      item.image ||
-                      "https://via.placeholder.com/300?text=No+Image"
-                    }
+                    src={item.image || "https://via.placeholder.com/300"}
                     alt={item.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
 
-                {/* DETAILS */}
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-secondary mb-3">
-                    {item.name}
-                  </h3>
-
-                  <p className="text-sm text-secondary/60 mb-1">
-                    Product ID: {item.productId || item.productID}
-                  </p>
-
-                  <p className="text-sm text-secondary/60 mb-1">
-                    Quantity: {item.quantity}
-                  </p>
-
+                  <h3 className="text-xl font-semibold">{item.name}</h3>
+                  <p className="text-sm text-secondary/60">Qty: {item.quantity}</p>
                   <p className="text-sm text-secondary/60">
-                    Price: Rs. {Number(item.price).toFixed(2)}
+                    Rs. {Number(item.price).toFixed(2)}
                   </p>
                 </div>
 
-                {/* LINE TOTAL */}
-                <div className="text-2xl font-semibold text-secondary tracking-wide">
+                <div className="text-2xl font-semibold">
                   Rs. {(item.price * item.quantity).toFixed(2)}
                 </div>
               </div>
@@ -193,8 +171,8 @@ export default function Orders() {
         </div>
 
         {/* ===== FOOTER ===== */}
-        <div className="px-10 py-8 bg-primary flex flex-col sm:flex-row justify-between items-center gap-6">
-          <div className="text-2xl font-semibold text-secondary tracking-wide">
+        <div className="px-10 py-8 bg-primary flex justify-between items-center gap-6">
+          <div className="text-2xl font-semibold">
             Total
             <span className="ml-3 text-accent">
               Rs. {Number(order.total).toFixed(2)}
@@ -202,11 +180,11 @@ export default function Orders() {
           </div>
 
           <button
-            onClick={() => navigate("/payment", { state: order })}
+            onClick={handleConfirmPay}
             className="bg-accent text-white px-14 py-4 rounded-full text-sm font-semibold
                        tracking-widest hover:opacity-90 transition shadow-lg"
           >
-            CONFIRM & PAY
+            {order.paymentStatus === "PAID" ? "VIEW RECEIPT" : "CONFIRM & PAY"}
           </button>
         </div>
 

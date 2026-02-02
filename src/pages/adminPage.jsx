@@ -47,15 +47,31 @@ export default function AdminPage() {
   }, []);
 
   return (
-    <div className="w-full h-full bg-primary flex gap-6 p-6 text-secondary">
+    <div className="min-h-screen w-full bg-primary flex gap-8 p-8 text-secondary">
 
       {/* ================= SIDEBAR ================= */}
-      <div className="w-[300px] flex flex-col items-center py-6">
+      <div className="
+        w-[300px]
+        bg-secondary
+        rounded-3xl
+        shadow-2xl
+        flex flex-col
+        items-center
+        py-8
+      ">
 
         {/* LOGO */}
-        <div className="flex w-[90%] h-[70px] bg-accent items-center rounded-2xl mb-8 px-4 shadow-md">
+        <div className="
+          flex w-[90%] h-[70px]
+          bg-accent
+          items-center
+          rounded-2xl
+          mb-10
+          px-4
+          shadow-lg
+        ">
           <img src="logo.png" alt="Admin" className="h-full object-contain" />
-          <span className="text-white text-xl font-semibold ml-4">
+          <span className="text-white text-xl font-semibold ml-4 tracking-wide">
             Admin Panel
           </span>
         </div>
@@ -65,55 +81,103 @@ export default function AdminPage() {
 
           <Link
             to="/admin"
-            className="w-[90%] flex items-center gap-3 px-5 py-3 rounded-xl
-                       font-medium transition
-                       hover:bg-accent hover:text-white"
+            className="
+              w-[90%]
+              flex items-center gap-3
+              px-6 py-3
+              rounded-xl
+              text-primary
+              font-medium
+              transition-all
+              hover:bg-accent hover:text-white
+            "
           >
-            <FaChartLine /> Dashboard
+            <FaChartLine />
+            Dashboard
           </Link>
 
           <Link
             to="/admin/orders"
-            className="w-[90%] flex items-center gap-3 px-5 py-3 rounded-xl
-                       font-medium transition
-                       hover:bg-accent hover:text-white"
+            className="
+              w-[90%]
+              flex items-center gap-3
+              px-6 py-3
+              rounded-xl
+              text-primary
+              font-medium
+              transition-all
+              hover:bg-accent hover:text-white
+            "
           >
-            <MdShoppingCartCheckout /> Orders
+            <MdShoppingCartCheckout />
+            Orders
           </Link>
 
           <Link
             to="/admin/products"
-            className="w-[90%] flex items-center gap-3 px-5 py-3 rounded-xl
-                       font-medium transition
-                       hover:bg-accent hover:text-white"
+            className="
+              w-[90%]
+              flex items-center gap-3
+              px-6 py-3
+              rounded-xl
+              text-primary
+              font-medium
+              transition-all
+              hover:bg-accent hover:text-white
+            "
           >
-            <BsBox2Heart /> Products
+            <BsBox2Heart />
+            Products
           </Link>
 
           <Link
             to="/admin/users"
-            className="w-[90%] flex items-center gap-3 px-5 py-3 rounded-xl
-                       font-medium transition
-                       hover:bg-accent hover:text-white"
+            className="
+              w-[90%]
+              flex items-center gap-3
+              px-6 py-3
+              rounded-xl
+              text-primary
+              font-medium
+              transition-all
+              hover:bg-accent hover:text-white
+            "
           >
-            <HiOutlineUsers /> Users
+            <HiOutlineUsers />
+            Users
           </Link>
         </div>
 
         {/* BACK TO HOME */}
         <button
           onClick={() => navigate("/")}
-          className="mt-auto mb-4 w-[90%] py-3 rounded-xl
-                     border border-secondary text-secondary
-                     font-semibold tracking-wide
-                     hover:bg-secondary hover:text-white transition"
+          className="
+            mt-auto
+            mb-4
+            w-[90%]
+            py-3
+            rounded-xl
+            border border-primary
+            text-primary
+            font-semibold
+            tracking-wide
+            transition-all
+            hover:bg-primary hover:text-secondary
+          "
         >
           Back to Home
         </button>
       </div>
 
       {/* ================= CONTENT ================= */}
-      <div className="flex-1 bg-white rounded-3xl shadow-xl border border-accent overflow-hidden">
+      <div className="
+        flex-1
+        bg-primary
+        rounded-3xl
+        shadow-2xl
+        border border-accent/30
+        overflow-hidden
+      ">
         {userloaded ? (
           <Routes>
             <Route path="/" element={<AdminDashboard />} />
