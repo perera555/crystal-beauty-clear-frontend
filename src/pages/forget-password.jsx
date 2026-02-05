@@ -13,11 +13,10 @@ export default function ForgetPasswordPage() {
   const navigate = useNavigate();
 
   /* ================= SEND OTP ================= */
-
   async function sendOTP() {
-    const trimmedEmail = email.trim();
+    const normalizedEmail = email.trim().toLowerCase(); // ✅ FIX
 
-    if (!trimmedEmail) {
+    if (!normalizedEmail) {
       toast.error("Please enter your email");
       return;
     }
@@ -25,17 +24,13 @@ export default function ForgetPasswordPage() {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/otp`,
-        null, // ⬅️ IMPORTANT
-        {
-          params: { email: trimmedEmail }, // ⬅️ SEND AS QUERY
-        }
+        { email: normalizedEmail } // ✅ SAME EMAIL FORMAT
       );
 
-      toast.success(`OTP sent to ${trimmedEmail}`);
+      toast.success(`OTP sent to ${normalizedEmail}`);
       setStep("otp");
     } catch (e) {
       console.error("Send OTP Error:", e);
-
       toast.error(
         e.response?.data?.message ||
           "Failed to send OTP. Please try again."
@@ -44,7 +39,6 @@ export default function ForgetPasswordPage() {
   }
 
   /* ================= CHANGE PASSWORD ================= */
-
   async function changePassword() {
     if (!otp || !newPassword || !confirmPassword) {
       toast.error("All fields are required");
@@ -60,8 +54,8 @@ export default function ForgetPasswordPage() {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/reset-password`,
         {
-          email: email.trim(),
-          otp,
+          email: email.trim().toLowerCase(), // ✅ FIX
+          otp: otp.trim(),
           newPassword,
         }
       );
@@ -70,7 +64,6 @@ export default function ForgetPasswordPage() {
       navigate("/login");
     } catch (e) {
       console.error("Reset Password Error:", e);
-
       toast.error(
         e.response?.data?.message ||
           "OTP is incorrect or expired"
@@ -79,7 +72,6 @@ export default function ForgetPasswordPage() {
   }
 
   /* ================= ENTER KEY ================= */
-
   const handleEmailKey = (e) => {
     if (e.key === "Enter") sendOTP();
   };
@@ -89,7 +81,6 @@ export default function ForgetPasswordPage() {
   };
 
   /* ================= UI ================= */
-
   return (
     <div className="w-full h-screen bg-[url('/login.jpg')] bg-cover bg-center flex justify-center items-center">
 

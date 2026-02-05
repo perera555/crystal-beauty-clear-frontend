@@ -21,6 +21,7 @@ export default function LoginPage() {
 
   /* ================= GOOGLE LOGIN ================= */
   const googleLogin = useGoogleLogin({
+    flow: "implicit", // ✅ REQUIRED FIX
     onSuccess: async (response) => {
       try {
         const res = await axios.post(

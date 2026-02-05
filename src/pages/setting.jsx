@@ -69,7 +69,7 @@ export default function UserSettingPage() {
             }
 
             const res = await axios.put(
-                `${API_URL}/api/users/me`,
+                `${API_URL}/api/users/update`, // ✅ FIXED
                 data,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -98,7 +98,7 @@ export default function UserSettingPage() {
             const token = localStorage.getItem("token");
 
             await axios.put(
-                `${API_URL}/api/users/me/password`,
+                `${API_URL}/api/users/password`, // ✅ FIXED
                 { password },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -242,7 +242,6 @@ export default function UserSettingPage() {
                             Update password
                         </button>
 
-                        {/* ===== BACK TO HOME ===== */}
                         <button
                             onClick={() => navigate("/")}
                             className="w-full py-3 rounded-2xl border border-secondary

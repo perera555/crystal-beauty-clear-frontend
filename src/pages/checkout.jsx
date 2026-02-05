@@ -13,6 +13,7 @@ export default function CheckoutPage() {
 
   const [address, setAddress] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState(""); // ✅ added
 
   const [cart, setCart] = useState(
     Array.isArray(location.state) ? location.state : loadCart()
@@ -56,6 +57,7 @@ export default function CheckoutPage() {
         {
           address: address,
           customerName: name || "",
+          phone: phone || "", // ✅ added safely
           items: items,
         },
         {
@@ -167,6 +169,21 @@ export default function CheckoutPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
+              className="w-full h-12 rounded-lg border border-secondary/30 px-4 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-accent transition"
+            />
+          </div>
+
+          {/* ✅ PHONE NUMBER */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-secondary">
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Enter your phone number"
               className="w-full h-12 rounded-lg border border-secondary/30 px-4 text-sm
                          focus:outline-none focus:ring-2 focus:ring-accent transition"
             />

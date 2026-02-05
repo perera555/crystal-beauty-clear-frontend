@@ -156,20 +156,20 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto">
           {[
             {
-              img: "/profile1.png",
+              img: "/profile.JPG",
               name: "Thamara Perera",
               role: "Founder / CEO",
               desc: "Visionary behind CBC’s mission and global expansion.",
             },
             {
-              img: "/profile2.png",
-              name: "Dilani Senarath",
+              img: "/profile2.jpeg",
+              name: "Shanthi Mallika",
               role: "Head of Product",
               desc: "Expert in skincare formulation & quality standards.",
             },
             {
-              img: "/profile3.png",
-              name: "Nuwan Silva",
+              img: "/profile3.JPG",
+              name: "kaweesha Idusara",
               role: "Brand Manager",
               desc: "Ensures CBC shines across global beauty markets.",
             },

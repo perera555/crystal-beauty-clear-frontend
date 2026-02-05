@@ -11,28 +11,45 @@ import { Loader } from "../../components/Loader";
 function ProductDeleteConfirm({ productID, close, refresh }) {
     function deleteProduct() {
         const token = localStorage.getItem("token");
-        axios.delete(
-            import.meta.env.VITE_API_URL + "/api/products/" + productID,
-            { headers: { Authorization: `Bearer ${token}` } }
-        ).then(() => {
-            toast.success("Product deleted");
-            close();
-            refresh();
-        }).catch(() => toast.error("Delete failed"));
+        axios
+            .delete(
+                import.meta.env.VITE_API_URL + "/api/products/" + productID,
+                { headers: { Authorization: `Bearer ${token}` } }
+            )
+            .then(() => {
+                toast.success("Product deleted");
+                close();
+                refresh();
+            })
+            .catch(() => toast.error("Delete failed"));
     }
 
     return (
         <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center">
             <div className="bg-white rounded-3xl p-8 shadow-xl w-[520px] space-y-6 relative">
-                <button onClick={close} className="absolute top-3 right-3 text-xl">×</button>
+                <button
+                    onClick={close}
+                    className="absolute top-3 right-3 text-xl cursor-pointer"
+                >
+                    ×
+                </button>
+
                 <p className="text-lg font-semibold text-center">
-                    Delete product <span className="text-accent">{productID}</span>?
+                    Delete product{" "}
+                    <span className="text-accent">{productID}</span>?
                 </p>
+
                 <div className="flex justify-center gap-4">
-                    <button onClick={close} className="px-6 py-2 rounded-xl border">
+                    <button
+                        onClick={close}
+                        className="px-6 py-2 rounded-xl border cursor-pointer"
+                    >
                         Cancel
                     </button>
-                    <button onClick={deleteProduct} className="px-6 py-2 rounded-xl bg-red-600 text-white">
+                    <button
+                        onClick={deleteProduct}
+                        className="px-6 py-2 rounded-xl bg-red-600 text-white cursor-pointer"
+                    >
                         Delete
                     </button>
                 </div>
@@ -55,7 +72,8 @@ export default function AdminProductPage() {
 
     useEffect(() => {
         if (!isloding) return;
-        axios.get(import.meta.env.VITE_API_URL + "/api/products")
+        axios
+            .get(import.meta.env.VITE_API_URL + "/api/products")
             .then(res => setProducts(res.data))
             .finally(() => setIsLoding(false));
     }, [isloding]);
@@ -74,7 +92,7 @@ export default function AdminProductPage() {
         });
     }, [products, search, categoryFilter]);
 
-    const stockBadge = (stock) => {
+    const stockBadge = stock => {
         if (stock === 0) return "bg-red-500/20 text-red-700";
         if (stock < 5) return "bg-yellow-400/20 text-yellow-700";
         return "bg-green-400/20 text-green-700";
@@ -82,7 +100,6 @@ export default function AdminProductPage() {
 
     return (
         <div className="w-full h-full p-8 bg-primary">
-
             {deleteID && (
                 <ProductDeleteConfirm
                     productID={deleteID}
@@ -99,14 +116,17 @@ export default function AdminProductPage() {
                     placeholder="Search products..."
                     className="rounded-xl border px-4 py-2 text-sm w-64"
                 />
+
                 <select
                     value={categoryFilter}
                     onChange={e => setCategoryFilter(e.target.value)}
-                    className="rounded-xl border px-4 py-2 text-sm"
+                    className="rounded-xl border px-4 py-2 text-sm cursor-pointer"
                 >
                     <option value="all">All Categories</option>
                     {[...new Set(products.map(p => p.category))].map(c => (
-                        <option key={c} value={c}>{c}</option>
+                        <option key={c} value={c}>
+                            {c}
+                        </option>
                     ))}
                 </select>
             </div>
@@ -114,14 +134,16 @@ export default function AdminProductPage() {
             {/* ADD PRODUCT */}
             <Link
                 to="/admin/addproduct"
-                className="fixed bottom-10 right-10 h-16 w-16 bg-accent text-white rounded-full flex items-center justify-center text-3xl shadow-xl"
+                className="fixed bottom-10 right-10 h-16 w-16 bg-accent text-white rounded-full flex items-center justify-center text-3xl shadow-xl cursor-pointer"
             >
                 <CiCirclePlus />
             </Link>
 
             {/* TABLE */}
             <div className="bg-white rounded-3xl shadow border overflow-x-auto">
-                {isloding ? <Loader /> : (
+                {isloding ? (
+                    <Loader />
+                ) : (
                     <table className="w-full text-sm table-fixed">
                         <thead className="bg-primary sticky top-0 z-10">
                             <tr className="text-xs uppercase text-secondary/60">
@@ -138,16 +160,29 @@ export default function AdminProductPage() {
 
                         <tbody className="divide-y">
                             {filteredProducts.map(p => (
-                                <tr key={p.productID} className="hover:bg-primary/60 transition">
+                                <tr
+                                    key={p.productID}
+                                    className="hover:bg-primary/60 transition"
+                                >
                                     <td className="px-6 py-4 text-center">
                                         <input
                                             type="checkbox"
-                                            checked={selected.includes(p.productID)}
+                                            className="cursor-pointer"
+                                            checked={selected.includes(
+                                                p.productID
+                                            )}
                                             onChange={() =>
                                                 setSelected(s =>
                                                     s.includes(p.productID)
-                                                        ? s.filter(id => id !== p.productID)
-                                                        : [...s, p.productID]
+                                                        ? s.filter(
+                                                              id =>
+                                                                  id !==
+                                                                  p.productID
+                                                          )
+                                                        : [
+                                                              ...s,
+                                                              p.productID
+                                                          ]
                                                 )
                                             }
                                         />
@@ -161,21 +196,31 @@ export default function AdminProductPage() {
                                         />
                                     </td>
 
-                                    <td className="px-6 py-4 text-center">{p.productID}</td>
+                                    <td className="px-6 py-4 text-center">
+                                        {p.productID}
+                                    </td>
 
-                                    <td className="px-6 py-4 text-left">{p.name}</td>
+                                    <td className="px-6 py-4 text-left">
+                                        {p.name}
+                                    </td>
 
                                     <td className="px-6 py-4 text-center font-semibold">
                                         {editingPrice === p.productID ? (
                                             <input
                                                 type="number"
                                                 defaultValue={p.price}
-                                                onBlur={() => setEditingPrice(null)}
+                                                onBlur={() =>
+                                                    setEditingPrice(null)
+                                                }
                                                 className="w-24 border rounded-lg px-2 py-1 mx-auto text-center"
                                             />
                                         ) : (
                                             <span
-                                                onClick={() => setEditingPrice(p.productID)}
+                                                onClick={() =>
+                                                    setEditingPrice(
+                                                        p.productID
+                                                    )
+                                                }
                                                 className="cursor-pointer underline decoration-dotted"
                                             >
                                                 LKR {p.price}
@@ -184,19 +229,39 @@ export default function AdminProductPage() {
                                     </td>
 
                                     <td className="px-6 py-4 text-center">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${stockBadge(p.stock)}`}>
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-xs font-semibold ${stockBadge(
+                                                p.stock
+                                            )}`}
+                                        >
                                             {p.stock}
                                         </span>
                                     </td>
 
-                                    <td className="px-6 py-4 text-center">{p.category}</td>
+                                    <td className="px-6 py-4 text-center">
+                                        {p.category}
+                                    </td>
 
                                     <td className="px-6 py-4 text-center">
                                         <div className="flex justify-center gap-3">
-                                            <button onClick={() => setDeleteID(p.productID)}>
+                                            <button
+                                                onClick={() =>
+                                                    setDeleteID(p.productID)
+                                                }
+                                                className="cursor-pointer"
+                                            >
                                                 <FaRegTrashCan className="text-red-600" />
                                             </button>
-                                            <button onClick={() => navigate("/admin/updateproduct", { state: p })}>
+
+                                            <button
+                                                onClick={() =>
+                                                    navigate(
+                                                        "/admin/updateproduct",
+                                                        { state: p }
+                                                    )
+                                                }
+                                                className="cursor-pointer"
+                                            >
                                                 <FaRegEdit className="text-accent" />
                                             </button>
                                         </div>

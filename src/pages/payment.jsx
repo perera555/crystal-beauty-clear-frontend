@@ -72,7 +72,6 @@ export default function Payment() {
       return false;
     }
 
-    /* ===== EXPIRY DATE CHECK (ADDED) ===== */
     const [mm, yy] = expiry.split("/").map(Number);
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
@@ -187,13 +186,12 @@ export default function Payment() {
           </div>
         </div>
 
-        {/* ================= CARD SECTION (THEME UPDATED) ================= */}
+        {/* ================= CARD SECTION ================= */}
         <div className="bg-white rounded-3xl shadow-2xl p-10">
           <h2 className="text-2xl font-semibold text-secondary mb-6">
             Card Details
           </h2>
 
-          {/* CARD PREVIEW */}
           <div
             className="mb-8 rounded-2xl p-6 text-white shadow-lg"
             style={{
@@ -209,11 +207,10 @@ export default function Payment() {
             </div>
           </div>
 
-          {/* INPUTS */}
           <div className="space-y-6">
             <input
               className="w-full h-14 rounded-xl border border-secondary/20 px-5
-                         focus:outline-none focus:ring-2 focus:ring-accent"
+                         focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
               placeholder="Cardholder Name"
               value={cardName}
               onChange={(e) => setCardName(e.target.value)}
@@ -221,7 +218,7 @@ export default function Payment() {
 
             <input
               className="w-full h-14 rounded-xl border border-secondary/20 px-5 tracking-widest
-                         focus:outline-none focus:ring-2 focus:ring-accent"
+                         focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
               placeholder="Card Number"
               value={cardNumber}
               onChange={(e) =>
@@ -232,14 +229,14 @@ export default function Payment() {
             <div className="grid grid-cols-2 gap-5">
               <input
                 className="h-14 rounded-xl border border-secondary/20 px-5
-                           focus:outline-none focus:ring-2 focus:ring-accent"
+                           focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
                 placeholder="MM/YY"
                 value={expiry}
                 onChange={(e) => setExpiry(e.target.value)}
               />
               <input
                 className="h-14 rounded-xl border border-secondary/20 px-5
-                           focus:outline-none focus:ring-2 focus:ring-accent"
+                           focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
                 placeholder="CVV"
                 value={cvv}
                 onChange={(e) =>
@@ -253,7 +250,7 @@ export default function Payment() {
             onClick={handlePay}
             className="mt-12 w-full bg-accent text-white py-4 rounded-full
                        text-sm font-semibold tracking-widest
-                       hover:opacity-90 active:scale-[0.99] transition shadow-lg"
+                       hover:opacity-90 active:scale-[0.99] transition shadow-lg cursor-pointer"
           >
             PAY RS. {Number(order.total).toFixed(2)}
           </button>
