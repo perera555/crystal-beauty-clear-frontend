@@ -25,15 +25,16 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 
 
+
 /* ================= ROUTERS ================= */
 
 
 import { AuthProvider } from "./AuthContext";
 import { PermissionProvider } from "./permissionProvider";
-
+import ProtectedRouter from "../proectedRouter";
 import AdminRouter from "../adminRouter";
 import Receipt from "../recipt";
-import ProtectedRouter from "../proectedRouter";
+
 
 function App() {
   return (
@@ -45,13 +46,10 @@ function App() {
               <Toaster position="top-right" />
 
               <Routes>
-                {/* ===== PUBLIC ===== */}
+                {/* ===== PUBLIC ROUTES ===== */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route
-                  path="/forgot-password"
-                  element={<ForgetPasswordPage />}
-                />
+                <Route path="/forgot-password" element={<ForgetPasswordPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
 
@@ -132,7 +130,7 @@ function App() {
                   path="/receipt"
                   element={
                     <ProtectedRouter>
-                      <Receipt/>
+                      <Receipt />
                     </ProtectedRouter>
                   }
                 />
@@ -146,7 +144,7 @@ function App() {
                   }
                 />
 
-                {/* ===== ADMIN ONLY ===== */}
+                {/* ===== ADMIN ROUTES ===== */}
                 <Route
                   path="/admin/*"
                   element={
