@@ -10,7 +10,6 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // ✅ PUBLIC MODE — DO NOTHING
     if (!token || token === "undefined" || token === "null") {
       setLoading(false);
       return;
@@ -18,21 +17,14 @@ export function AuthProvider({ children }) {
 
     axios
       .get(import.meta.env.VITE_API_URL + "/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => {
-        setUser(res.data.user);
-      })
+      .then((res) => setUser(res.data.user))
       .catch(() => {
-        // 🔒 IMPORTANT: do NOT nuke state mid-render
         localStorage.removeItem("token");
         setUser(null);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   }, []);
 
   return (

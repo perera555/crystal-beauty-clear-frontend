@@ -2,6 +2,8 @@ import { Navigate, useLocation } from "react-router-dom";
 import { usePermission } from "./src/permissionProvider";
 
 
+
+
 export default function ProtectedRouter({ children }) {
   const { isLoggedIn, loading } = usePermission();
   const location = useLocation();

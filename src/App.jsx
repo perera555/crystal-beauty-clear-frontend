@@ -18,16 +18,22 @@ import Orders from "./pages/orders";
 import RegisterPage from "./pages/registerPage";
 import ForgetPasswordPage from "./pages/forget-password";
 import UserSettingPage from "./pages/setting";
- // ✅ MUST MATCH FILE NAME EXACTLY
 
 /* ================= PROVIDERS ================= */
 import { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+
+
+
+/* ================= ROUTERS ================= */
+
+
 import { AuthProvider } from "./AuthContext";
 import { PermissionProvider } from "./permissionProvider";
-import AdminRouter from "../AdminRouter";
-import ProtectedRouter from "../proectedRouter";
+
+import AdminRouter from "../adminRouter";
 import Receipt from "../recipt";
+import ProtectedRouter from "../proectedRouter";
 
 function App() {
   return (
@@ -42,7 +48,10 @@ function App() {
                 {/* ===== PUBLIC ===== */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route path="/forgot-password" element={<ForgetPasswordPage />} />
+                <Route
+                  path="/forgot-password"
+                  element={<ForgetPasswordPage />}
+                />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
 
@@ -119,12 +128,11 @@ function App() {
                   }
                 />
 
-                {/* ✅ RECEIPT ROUTE (MATCHES navigate("/receipt")) */}
                 <Route
                   path="/receipt"
                   element={
                     <ProtectedRouter>
-                      <Receipt />
+                      <Receipt/>
                     </ProtectedRouter>
                   }
                 />
@@ -148,6 +156,7 @@ function App() {
                   }
                 />
 
+                {/* ===== TEST ===== */}
                 <Route path="/test" element={<TestPage />} />
 
                 {/* ===== FALLBACK ===== */}
