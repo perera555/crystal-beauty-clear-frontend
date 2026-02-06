@@ -32,12 +32,12 @@ export default function ContactPage() {
 
           <div className="space-y-3 text-lg text-gray-700">
             <p><strong>Email:</strong> support@crystalbeautyclear.lk</p>
-            <p><strong>Phone:</strong> +94 76 738 3649</p>
-            <p><strong>Hotline:</strong> +94 71 555 8899</p>
-            <p><strong>WhatsApp:</strong> +94 76 738 3649</p>
+            <p><strong>Phone:</strong> +94 718617860</p>
+            <p><strong>Hotline:</strong> +94 112899870</p>
+            <p><strong>WhatsApp:</strong> +94 718617860</p>
             <p>
-              <strong>Address:</strong> Airforce Road, Katukurunda, Kalutara
-              South, Sri Lanka
+              <strong>Address:</strong> 1566/B, Sirimalwatta, Kottawa,
+              Pannipitiya, Sri Lanka, 10230.
             </p>
           </div>
 
@@ -139,11 +139,11 @@ export default function ContactPage() {
           className="w-[350px] md:w-[520px] mx-auto rounded-3xl shadow-2xl hover:scale-[1.04] transition-all duration-300 mb-16"
         />
 
-        {/* Google Map */}
+        {/* Google Map – UPDATED LOCATION ONLY */}
         <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden shadow-2xl border border-white/40">
           <iframe
             title="CBC Location"
-            src="https://www.google.com/maps?q=Katukurunda%20Kalutara%20Sri%20Lanka&output=embed"
+            src="https://www.google.com/maps?q=Sirimalwatta%20Kottawa%20Pannipitiya%20Sri%20Lanka&output=embed"
             className="w-full h-[400px] border-0"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

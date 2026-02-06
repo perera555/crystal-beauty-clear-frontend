@@ -14,15 +14,13 @@ export default function UserDataMobile() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (token != null) {
+    if (token) {
       axios
         .get(import.meta.env.VITE_API_URL + "/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          setUser(res.data);
+          setUser(res.data.user ?? res.data);
           setLoading(false);
         })
         .catch(() => {
@@ -36,30 +34,51 @@ export default function UserDataMobile() {
   }, []);
 
   return (
-    <div className="flex justify-end items-center px-4 min-h-[56px]">
-
-      {/* Logout Confirmation Modal */}
+    <div
+      className="
+        w-full max-w-full overflow-x-hidden
+        px-4 py-4
+        flex justify-center items-center
+        bg-primary
+        border-t border-secondary/10
+      "
+    >
+      {/* ================= LOGOUT MODAL ================= */}
       {isLogoutconfirmedopen && (
-        <div className="fixed z-[120] h-screen w-full top-0 left-0 bg-black/30 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 flex flex-col items-center shadow-lg">
-            <p className="text-secondary mb-4">
+        <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex justify-center items-center">
+          <div className="bg-primary rounded-2xl p-6 w-[300px] max-w-[90vw] shadow-xl">
+            <p className="text-secondary mb-6 text-center font-medium">
               Are you sure you want to logout?
             </p>
+
             <div className="flex gap-4">
               <button
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
                 onClick={() => {
                   localStorage.removeItem("token");
                   setUser(null);
                   setIsLogoutconfirmedopen(false);
                   window.location.href = "/login";
                 }}
+                className="
+                  flex-1 py-2 rounded-full
+                  bg-accent text-primary font-semibold
+                  hover:bg-accent/90
+                  outline-none
+                  focus:outline-none focus:ring-2 focus:ring-accent/40
+                "
               >
                 Yes
               </button>
+
               <button
-                className="bg-gray-300 text-secondary px-4 py-2 rounded-md hover:bg-gray-400 transition"
                 onClick={() => setIsLogoutconfirmedopen(false)}
+                className="
+                  flex-1 py-2 rounded-full
+                  bg-secondary/10 text-secondary font-semibold
+                  hover:bg-secondary/20
+                  outline-none
+                  focus:outline-none focus:ring-2 focus:ring-accent/40
+                "
               >
                 No
               </button>
@@ -68,76 +87,113 @@ export default function UserDataMobile() {
         </div>
       )}
 
-      {/* Loading Spinner */}
+      {/* ================= LOADING ================= */}
       {loading && (
-        <div className="w-[28px] h-[28px] border-[3px] border-white border-b-transparent rounded-full animate-spin"></div>
+        <div
+          className="
+            w-[28px] h-[28px]
+            border-[3px] border-secondary/30
+            border-t-accent
+            rounded-full animate-spin
+          "
+        />
       )}
 
-      {/* Logged-in User */}
+      {/* ================= USER ================= */}
       {!loading && user && (
-        <div className="flex items-center gap-3 bg-primary px-4 py-1.5 rounded-full shadow-lg shadow-black/20">
-
+        <div
+          className="
+            w-full
+            flex items-center gap-3
+            bg-primary
+            px-4 py-3
+            rounded-2xl
+            border border-secondary/10
+            shadow-[0_10px_30px_rgba(57,62,70,0.15)]
+          "
+        >
           {/* Avatar */}
           <div
-            className="w-[42px] h-[42px] rounded-full overflow-hidden flex items-center justify-center
-                       bg-gradient-to-br from-white/30 to-black/20
-                       shadow-inner shadow-black/30
-                       ring-2 ring-accent"
+            className="
+              w-[44px] h-[44px]
+              rounded-full overflow-hidden
+              bg-white
+              border-2 border-accent
+              flex-shrink-0
+            "
           >
             <img
               src={user.image || TEMP_AVATAR}
               alt="User"
               className="w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.src = TEMP_AVATAR;
-              }}
+              onError={(e) => (e.currentTarget.src = TEMP_AVATAR)}
             />
           </div>
 
           {/* Name */}
-          <span className="text-secondary font-medium text-sm">
+          <span className="text-secondary font-medium text-sm flex-1 truncate">
             {user.firstName}
           </span>
 
-          {/* Select */}
+          {/* Dropdown (NO BLUE) */}
           <select
             defaultValue=""
             onChange={(e) => {
-              if (e.target.value === "logout") {
-                setIsLogoutconfirmedopen(true);
-              }
+              const value = e.target.value;
 
-              if (e.target.value === "orders") {
-                navigate("/checkout"); // ✅ GO TO CHECKOUT PAGE
-              }
+              if (value === "account") navigate("/setting");
+              if (value === "orders") navigate("/orders");
+              if (value === "logout") setIsLogoutconfirmedopen(true);
+
+              e.target.value = "";
             }}
-            className="h-[30px] bg-accent text-white text-sm px-3 rounded-full cursor-pointer
-                       shadow-md shadow-black/30
-                       focus:outline-none focus:ring-2 focus:ring-accent/50"
+            className="
+              h-[32px]
+              px-3
+              text-sm
+              rounded-full
+              bg-primary
+              text-secondary
+              border border-secondary/30
+              cursor-pointer
+              appearance-none
+              outline-none
+              focus:outline-none
+              focus:ring-2 focus:ring-accent/40
+              focus:border-accent
+            "
           >
-            <option value="" className="text-secondary bg-primary text-sm">
+            <option value="" disabled className="bg-primary text-secondary">
               Select
             </option>
-            <option value="account" className="text-secondary bg-primary text-sm">
+            <option value="account" className="bg-primary text-secondary">
               Account Setting
             </option>
-            <option value="orders" className="text-secondary bg-primary text-sm">
-              Checkout
+            <option value="orders" className="bg-primary text-secondary">
+              My Orders
             </option>
-            <option value="logout" className="text-secondary bg-primary text-sm">
+            <option value="logout" className="bg-primary text-secondary">
               Logout
             </option>
           </select>
         </div>
       )}
 
-      {/* Login Button */}
-      {!loading && user == null && (
+      {/* ================= LOGIN ================= */}
+      {!loading && !user && (
         <a
           href="/login"
-          className="bg-accent text-white px-4 py-2 rounded-full text-sm font-medium
-                     shadow-lg shadow-black/30
-                     hover:bg-accent/90 transition"
+          className="
+            bg-accent text-primary
+            px-6 py-2.5
+            rounded-full
+            text-sm font-semibold
+            shadow-md
+            hover:bg-accent/90
+            outline-none
+            focus:outline-none focus:ring-2 focus:ring-accent/40
+            transition
+          "
         >
           Login
         </a>

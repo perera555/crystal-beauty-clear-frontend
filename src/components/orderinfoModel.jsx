@@ -142,6 +142,7 @@ export default function OrderDetailsModal({
               <option value="processing">Processing</option>
               <option value="shipped">Shipped</option>
               <option value="completed">Completed</option>
+              <option value="delivered">Delivered</option>
               <option value="cancelled">Cancelled</option>
               <option value="refunded">Refunded</option>
               <option value="pending">Pending</option>

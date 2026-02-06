@@ -1,129 +1,209 @@
 import Header from "../components/header";
 
-
 export default function AboutPage() {
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-[color:var(--color-primary)] via-white to-[color:var(--color-accent)] text-[color:var(--color-secondary)] font-sans">
-        <Header/>
-    
+    <div className="w-full min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--color-primary),_#ffffff_65%)] text-[color:var(--color-secondary)] font-sans">
+      <Header />
 
       {/* ABOUT HEADER */}
-      <div className="text-center py-20 px-6">
-        <h1 className="text-5xl md:text-6xl font-bold">
-          About <span className="text-[color:var(--color-accent)]">Crystal Beauty Clear</span>
+      <div className="text-center py-28 px-6 relative">
+        <div className="absolute inset-0 -z-10 bg-[color:var(--color-accent)]/20 blur-[140px]" />
+        <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight">
+          About{" "}
+          <span className="text-[color:var(--color-accent)]">
+            Crystal Beauty Clear
+          </span>
         </h1>
-        <p className="mt-4 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+        <p className="mt-6 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-[1.8] tracking-wide">
           Discover the story, passion, and purpose behind
-          <span className="font-semibold text-[color:var(--color-accent)]"> CBC Cosmetics</span> —
-          your trusted brand for luxury skincare and beauty.
+          <span className="font-semibold text-[color:var(--color-accent)]">
+            {" "}
+            CBC Cosmetics
+          </span>{" "}
+          — your trusted brand for luxury skincare and beauty.
         </p>
       </div>
 
       {/* MISSION SECTION */}
-      <div className="max-w-6xl mx-auto px-8 md:px-20 py-16">
-        <div className="bg-white/40 backdrop-blur-md p-10 md:p-14 rounded-3xl shadow-xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-6">
-            Our <span className="text-[color:var(--color-accent)]">Mission</span>
+      <div className="max-w-6xl mx-auto px-8 md:px-20 py-20">
+        <div className="bg-white/50 backdrop-blur-2xl p-12 md:p-16 rounded-[3rem]
+        shadow-[0_30px_80px_rgba(0,0,0,0.18)]
+        border border-white/60">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
+            Our{" "}
+            <span className="text-[color:var(--color-accent)]">Mission</span>
           </h2>
-          <p className="text-gray-700 text-lg leading-relaxed text-center">
-            Our mission at Crystal Beauty Clear is simple — to empower every person with
-            confidence that comes from healthy, glowing skin. We blend nature-inspired
-            botanicals with advanced skincare science to deliver visible, lasting results.
+          <p className="text-gray-700 text-lg leading-[1.9] text-center max-w-4xl mx-auto">
+            Our mission at Crystal Beauty Clear is simple — to empower every
+            person with confidence that comes from healthy, glowing skin. We
+            blend nature-inspired botanicals with advanced skincare science to
+            deliver visible, lasting results.
           </p>
         </div>
       </div>
 
       {/* STORY SECTION */}
-      <div className="max-w-6xl mx-auto px-8 md:px-20 py-10 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className="max-w-6xl mx-auto px-8 md:px-20 py-10 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
         <div className="flex justify-center">
           <img
             src="/cbcmodel.jpg"
             alt="CBC Story"
-            className="w-[350px] md:w-[420px] rounded-3xl shadow-2xl hover:scale-[1.03] transition-all duration-300"
+            className="w-[350px] md:w-[420px] rounded-[2.5rem]
+            shadow-[0_35px_90px_rgba(0,0,0,0.25)]
+            hover:scale-[1.04]
+            transition-all duration-500"
           />
         </div>
 
-        <div className="space-y-5">
+        <div className="space-y-6">
           <h2 className="text-4xl font-bold">
-            The <span className="text-[color:var(--color-accent)]">CBC Story</span>
+            The{" "}
+            <span className="text-[color:var(--color-accent)]">
+              CBC Story
+            </span>
           </h2>
-          <p className="text-gray-700 text-lg leading-relaxed">
-            CBC (Crystal Beauty Clear) began as a small Sri Lankan skincare brand, founded
-            with a dream: to create pure, effective, and luxurious beauty products.
-            Today, CBC stands worldwide as a trusted symbol of premium quality.
+          <p className="text-gray-700 text-lg leading-[1.85] tracking-wide">
+            CBC (Crystal Beauty Clear) began as a small Sri Lankan skincare
+            brand, founded with a dream: to create pure, effective, and
+            luxurious beauty products. Today, CBC stands worldwide as a trusted
+            symbol of premium quality.
           </p>
-          <p className="text-gray-700 text-lg leading-relaxed">
-            Every formula we create is crafted with love — bringing visible transformation,
-            long-lasting radiance, and the luxury your skin deserves.
+          <p className="text-gray-700 text-lg leading-[1.85] tracking-wide">
+            Every formula we create is crafted with love — bringing visible
+            transformation, long-lasting radiance, and the luxury your skin
+            deserves.
           </p>
         </div>
       </div>
 
       {/* VALUES SECTION */}
-      <div className="bg-[color:var(--color-secondary)] text-white py-20 px-8 md:px-20 rounded-t-[50px] shadow-inner">
-        <h2 className="text-center text-4xl font-bold mb-12">
-          What Makes <span className="text-[color:var(--color-accent)]">CBC Unique?</span>
+      <div className="bg-[color:var(--color-secondary)] text-white py-24 px-8 md:px-20 rounded-t-[60px] shadow-inner">
+        <h2 className="text-center text-4xl font-bold mb-16">
+          What Makes{" "}
+          <span className="text-[color:var(--color-accent)]">
+            CBC Unique?
+          </span>
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-lg p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all">
-            <h3 className="text-2xl font-semibold text-[color:var(--color-accent)] mb-3">Pure Ingredients</h3>
-            <p className="text-gray-300">Safe, natural, gentle, and effective formulas crafted for healthy, glowing skin.</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-xl p-10 rounded-[2.5rem]
+          shadow-[0_25px_60px_rgba(0,0,0,0.25)]
+          hover:shadow-[0_40px_100px_rgba(250,129,47,0.35)]
+          transition-all duration-500">
+            <h3 className="text-2xl font-semibold text-[color:var(--color-accent)] mb-4">
+              Pure Ingredients
+            </h3>
+            <p className="text-gray-300 leading-relaxed">
+              Safe, natural, gentle, and effective formulas crafted for healthy,
+              glowing skin.
+            </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-lg p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all">
-            <h3 className="text-2xl font-semibold text-[color:var(--color-accent)] mb-3">Cruelty-Free</h3>
-            <p className="text-gray-300">CBC proudly stands against animal testing — beauty with compassion.</p>
+          <div className="bg-white/10 backdrop-blur-xl p-10 rounded-[2.5rem]
+          shadow-[0_25px_60px_rgba(0,0,0,0.25)]
+          hover:shadow-[0_40px_100px_rgba(250,129,47,0.35)]
+          transition-all duration-500">
+            <h3 className="text-2xl font-semibold text-[color:var(--color-accent)] mb-4">
+              Cruelty-Free
+            </h3>
+            <p className="text-gray-300 leading-relaxed">
+              CBC proudly stands against animal testing — beauty with compassion.
+            </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-lg p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all">
-            <h3 className="text-2xl font-semibold text-[color:var(--color-accent)] mb-3">World-Class Quality</h3>
-            <p className="text-gray-300">Formulated to meet international standards for visible, reliable results.</p>
+          <div className="bg-white/10 backdrop-blur-xl p-10 rounded-[2.5rem]
+          shadow-[0_25px_60px_rgba(0,0,0,0.25)]
+          hover:shadow-[0_40px_100px_rgba(250,129,47,0.35)]
+          transition-all duration-500">
+            <h3 className="text-2xl font-semibold text-[color:var(--color-accent)] mb-4">
+              World-Class Quality
+            </h3>
+            <p className="text-gray-300 leading-relaxed">
+              Formulated to meet international standards for visible, reliable
+              results.
+            </p>
           </div>
         </div>
       </div>
 
-      {/* NEW — BRAND HISTORY SECTION */}
-      <div className="max-w-6xl mx-auto px-8 md:px-20 py-20">
+      {/* BRAND JOURNEY */}
+      <div className="max-w-6xl mx-auto px-8 md:px-20 py-24">
         <h2 className="text-4xl font-bold text-center mb-10">
-          Our <span className="text-[color:var(--color-accent)]">Journey</span>
+          Our{" "}
+          <span className="text-[color:var(--color-accent)]">
+            Journey
+          </span>
         </h2>
-        <p className="text-gray-700 text-lg max-w-4xl mx-auto text-center leading-relaxed">
-          Over the years, CBC has grown from a passionate idea into a globally recognized
-          skincare and cosmetics brand. With thousands of happy customers, we continue to
-          innovate and bring products that elevate natural beauty.
+        <p className="text-gray-700 text-lg max-w-4xl mx-auto text-center leading-[1.9] tracking-wide">
+          Over the years, CBC has grown from a passionate idea into a globally
+          recognized skincare and cosmetics brand. With thousands of happy
+          customers, we continue to innovate and bring products that elevate
+          natural beauty.
         </p>
       </div>
 
-      {/* NEW — TEAM SECTION */}
-      <div className="bg-white/40 backdrop-blur-md py-20 px-8 md:px-20">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-12">
-            Meet the <span className="text-[color:var(--color-accent)]">CBC Team</span>
+      {/* TEAM SECTION — LUXURY */}
+      <div className="bg-white/50 backdrop-blur-2xl py-28 px-8 md:px-20">
+        <div className="max-w-6xl mx-auto text-center mb-16">
+          <h2 className="text-4xl font-bold">
+            Meet the{" "}
+            <span className="text-[color:var(--color-accent)]">
+              CBC Team
+            </span>
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          <div className="bg-white p-6 rounded-3xl shadow-xl text-center">
-            <img src="/profile1.png" className="w-32 h-32 mx-auto rounded-full mb-4 shadow-md" />
-            <h3 className="text-xl font-bold">Thamara Perera</h3>
-            <p className="text-[color:var(--color-accent)] font-semibold">Founder / CEO</p>
-            <p className="text-gray-600 mt-2">Visionary behind CBC’s mission and global expansion.</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto">
+          {[
+            {
+              img: "/profile.JPG",
+              name: "Thamara Perera",
+              role: "Founder / CEO",
+              desc: "Visionary behind CBC’s mission and global expansion.",
+            },
+            {
+              img: "/profile2.jpeg",
+              name: "Shanthi Mallika",
+              role: "Head of Product",
+              desc: "Expert in skincare formulation & quality standards.",
+            },
+            {
+              img: "/profile3.JPG",
+              name: "kaweesha Idusara",
+              role: "Brand Manager",
+              desc: "Ensures CBC shines across global beauty markets.",
+            },
+          ].map((member) => (
+            <div
+              key={member.name}
+              className="bg-white/80 backdrop-blur-xl p-10 rounded-[3rem]
+              shadow-[0_30px_80px_rgba(0,0,0,0.2)]
+              hover:shadow-[0_45px_120px_rgba(250,129,47,0.4)]
+              transition-all duration-700 text-center"
+            >
+              <div className="relative w-40 h-40 mx-auto mb-8">
+                <div className="absolute inset-0 rounded-full bg-[color:var(--color-accent)]/40 blur-2xl"></div>
+                <img
+                  src={member.img}
+                  alt={member.name}
+                  className="relative w-40 h-40 object-cover rounded-full ring-4 ring-white shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
+                />
+              </div>
 
-          <div className="bg-white p-6 rounded-3xl shadow-xl text-center">
-            <img src="/profile2.png" className="w-32 h-32 mx-auto rounded-full mb-4 shadow-md" />
-            <h3 className="text-xl font-bold">Dilani Senarath</h3>
-            <p className="text-[color:var(--color-accent)] font-semibold">Head of Product</p>
-            <p className="text-gray-600 mt-2">Expert in skincare formulation & quality standards.</p>
-          </div>
+              <h3 className="text-2xl font-bold tracking-wide">
+                {member.name}
+              </h3>
+              <p className="text-[color:var(--color-accent)] font-semibold mt-1">
+                {member.role}
+              </p>
 
-          <div className="bg-white p-6 rounded-3xl shadow-xl text-center">
-            <img src="/profile3.png" className="w-32 h-32 mx-auto rounded-full mb-4 shadow-md" />
-            <h3 className="text-xl font-bold">Nuwan Silva</h3>
-            <p className="text-[color:var(--color-accent)] font-semibold">Brand Manager</p>
-            <p className="text-gray-600 mt-2">Ensures CBC shines across global beauty markets.</p>
-          </div>
+              <div className="w-12 h-[2px] bg-[color:var(--color-accent)] mx-auto my-4 rounded-full"></div>
+
+              <p className="text-gray-600 leading-relaxed">
+                {member.desc}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
