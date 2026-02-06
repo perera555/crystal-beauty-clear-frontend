@@ -139,16 +139,19 @@ export default function ContactPage() {
           className="w-[350px] md:w-[520px] mx-auto rounded-3xl shadow-2xl hover:scale-[1.04] transition-all duration-300 mb-16"
         />
 
-        {/* Google Map – UPDATED LOCATION ONLY */}
+        {/* Google Map – UPDATED LOCATION */}
         <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden shadow-2xl border border-white/40">
           <iframe
             title="CBC Location"
-            src="https://www.google.com/maps?q=Sirimalwatta%20Kottawa%20Pannipitiya%20Sri%20Lanka&output=embed"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7922.508313394378!2d79.9647650846878!3d6.860113001484907!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae251582d20f019%3A0xbb443b67aa64e3a0!2sGAZELLE%20KEY%20INTENATIONAL%20PVT%20LTD!5e0!3m2!1sen!2sus!4v1770347411627!5m2!1sen!2sus"
             className="w-full h-[400px] border-0"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
+
+
           ></iframe>
         </div>
+
       </div>
     </div>
   );
