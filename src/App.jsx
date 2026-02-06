@@ -18,11 +18,14 @@ import Orders from "./pages/orders";
 import RegisterPage from "./pages/registerPage";
 import ForgetPasswordPage from "./pages/forget-password";
 import UserSettingPage from "./pages/setting";
-import Receipt from "../recipt";
+
+
+
 
 /* ================= PROVIDERS ================= */
 import { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Receipt from "../receipt";
 
 /* ================= APP ================= */
 
@@ -58,7 +61,7 @@ function App() {
 
             <Route path="/payment" element={<Payment />} />
 
-            <Route path="/receipt" element={<Receipt />} />
+            <Route path="/receipt" element={< Receipt/>} />
 
             <Route path="/setting" element={<UserSettingPage />} />
 
