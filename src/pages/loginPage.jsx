@@ -3,14 +3,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useAuth } from "../AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const { setUser } = useAuth();
 
   /* ================= ENTER KEY FIX ================= */
   function handleKeyDown(e) {
@@ -21,7 +19,7 @@ export default function LoginPage() {
 
   /* ================= GOOGLE LOGIN ================= */
   const googleLogin = useGoogleLogin({
-    flow: "implicit", // ✅ REQUIRED FIX
+    flow: "implicit",
     onSuccess: async (response) => {
       try {
         const res = await axios.post(
@@ -30,7 +28,9 @@ export default function LoginPage() {
         );
 
         localStorage.setItem("token", res.data.token);
-        setUser(res.data.user);
+
+        // store user in localStorage instead of AuthContext
+        localStorage.setItem("user", JSON.stringify(res.data.user));
 
         if (res.data.user.role === "admin") {
           navigate("/admin");
@@ -53,7 +53,9 @@ export default function LoginPage() {
       );
 
       localStorage.setItem("token", response.data.token);
-      setUser(response.data.user);
+
+      // store user in localStorage instead of AuthContext
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
       toast.success("Login successful");
 
