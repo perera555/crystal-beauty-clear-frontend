@@ -148,9 +148,24 @@ export default function AddProductPage() {
                         value={category}
                         onChange={e => setCategory(e.target.value)}
                     >
+                        {/* Existing */}
                         <option value="cream">Cream</option>
                         <option value="lotion">Lotion</option>
                         <option value="serum">Serum</option>
+
+                        {/* Added options */}
+                        <option value="lipstick">Lipstick</option>
+                        <option value="lipbalm">Lip Balm</option>
+                        <option value="bodywash">Body Wash</option>
+                        <option value="facewash">Face Wash</option>
+                        <option value="shampoo">Shampoo</option>
+                        <option value="conditioner">Conditioner</option>
+                        <option value="perfume">Perfume</option>
+                        <option value="sunscreen">Sunscreen</option>
+                        <option value="mask">Face Mask</option>
+                        <option value="scrub">Scrub</option>
+                        <option value="toner">Toner</option>
+                        <option value="cleanser">Cleanser</option>
                     </select>
                 </div>
 
